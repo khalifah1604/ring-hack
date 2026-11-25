@@ -1,0 +1,3196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#111111" />
+<title>RING — Everyday life in Bells</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RING — DESIGN TOKENS
+   ============================================================ */
+:root{
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --ink:#111111;
+  --ink-2:#3F3F45;
+  --muted:#7A7A80;
+  --muted-2:#A0A0A6;
+  --line:#E9E9EC;
+  --line-2:#F1F1F3;
+  --bg:#FFFFFF;
+  --bg-2:#F6F6F7;
+  --bg-3:#EFEFF2;
+  --radius:14px;
+  --radius-sm:10px;
+  --radius-lg:22px;
+  --nav-h:64px;
+  --sidebar-w:250px;
+  --shadow-1:0 1px 2px rgba(17,17,17,.05);
+  --shadow-2:0 10px 34px rgba(17,17,17,.10);
+  --shadow-3:0 24px 70px rgba(17,17,17,.18);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:var(--font);
+  font-size:15px;
+  line-height:1.55;
+  color:var(--ink);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+body.modal-open{overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+input,select,textarea{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+ul{margin:0;padding:0;list-style:none}
+h1,h2,h3,h4,p{margin:0}
+svg{display:block}
+::selection{background:#111;color:#fff}
+
+/* ============================================================
+   TYPOGRAPHY / HELPERS
+   ============================================================ */
+.h1{font-size:24px;font-weight:700;letter-spacing:-.03em;line-height:1.25}
+.h2{font-size:18px;font-weight:650;letter-spacing:-.02em;line-height:1.3}
+.h3{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.sub{font-size:13px;color:var(--muted)}
+.xs{font-size:11.5px}
+.sm{font-size:13px}
+.muted{color:var(--muted)}
+.fw600{font-weight:600}
+.tnum{font-variant-numeric:tabular-nums}
+.mono{font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.row{display:flex;align-items:center;gap:10px}
+.row-between{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.stack{display:flex;flex-direction:column}
+.grow{flex:1;min-width:0}
+.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hr{height:1px;background:var(--line);border:0;margin:0}
+
+/* ============================================================
+   APP SHELL
+   ============================================================ */
+#app{min-height:100dvh}
+.shell{min-height:100dvh;display:flex;flex-direction:column}
+.main-area{flex:1;display:flex;flex-direction:column}
+main.page{
+  flex:1;
+  padding-bottom:calc(var(--nav-h) + 34px + env(safe-area-inset-bottom));
+}
+.wrap{width:100%;max-width:720px;margin:0 auto;padding:0 18px}
+.wrap.wide{max-width:1080px}
+.wrap.wide-2{max-width:920px}
+.section{margin-top:26px}
+.section:first-child{margin-top:0}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+.section-head .link{font-size:12.5px;font-weight:600;color:var(--ink);display:inline-flex;align-items:center;gap:4px;border-bottom:1px solid transparent;padding-bottom:1px}
+.section-head .link:active{opacity:.6}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted-2)}
+
+/* ============================================================
+   ICON BUTTONS / AVATARS
+   ============================================================ */
+.icon-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border-radius:50%;color:var(--ink);
+  transition:background .16s ease;
+  flex:0 0 auto;
+}
+.icon-btn:hover{background:var(--bg-2)}
+.icon-btn:active{background:var(--bg-3)}
+.avatar{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;
+  background:var(--ink);color:#fff;
+  font-size:12.5px;font-weight:650;letter-spacing:.02em;
+  flex:0 0 auto;user-select:none;
+}
+.avatar.sm{width:30px;height:30px;font-size:11px}
+.avatar.lg{width:64px;height:64px;font-size:22px;font-weight:600}
+.avatar.ghost{background:var(--bg-3);color:var(--ink-2)}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  height:46px;padding:0 20px;border-radius:12px;
+  font-size:14px;font-weight:600;letter-spacing:-.01em;
+  transition:transform .12s ease, background .16s ease, opacity .16s ease;
+  white-space:nowrap;
+}
+.btn:active{transform:scale(.985)}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.primary:hover{background:#000}
+.btn.ghost{background:var(--bg-2);color:var(--ink)}
+.btn.ghost:hover{background:var(--bg-3)}
+.btn.outline{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.btn.outline:hover{background:var(--bg-2)}
+.btn.danger{background:#fff;border:1px solid var(--line);color:#B4242A}
+.btn.block{width:100%}
+.btn.sm{height:36px;padding:0 14px;font-size:12.5px;border-radius:10px}
+.btn:disabled{opacity:.4;pointer-events:none}
+.btn-link{font-size:13px;font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.input,.select,.textarea{
+  width:100%;height:46px;padding:0 14px;border-radius:12px;
+  background:var(--bg-2);border:1px solid transparent;
+  font-size:14.5px;color:var(--ink);outline:none;
+  transition:border-color .16s ease, background .16s ease;
+}
+.textarea{height:auto;padding:12px 14px;resize:vertical;line-height:1.5}
+.input::placeholder,.textarea::placeholder{color:var(--muted-2)}
+.input:focus,.select:focus,.textarea:focus{background:#fff;border-color:var(--ink)}
+.select{appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A7A80' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat:no-repeat;background-position:right 14px center;padding-right:38px;
+}
+.search-box{position:relative}
+.search-box .ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted-2)}
+.search-box .input{padding-left:42px}
+.check{
+  width:20px;height:20px;border-radius:6px;border:1.6px solid #CFCFD4;background:#fff;
+  display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
+  transition:all .14s ease;color:transparent;
+}
+.check.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast{
+  position:fixed;left:50%;bottom:calc(var(--nav-h) + 26px + env(safe-area-inset-bottom));
+  transform:translate(-50%,14px);z-index:300;
+  background:var(--ink);color:#fff;font-size:13px;font-weight:500;
+  padding:11px 18px;border-radius:999px;box-shadow:var(--shadow-2);
+  opacity:0;transition:opacity .22s ease, transform .22s ease;
+  max-width:88vw;text-align:center;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:900px){.toast{bottom:32px}}
+
+/* ============================================================
+   MODAL / SHEET
+   ============================================================ */
+#modal-root{position:fixed;inset:0;z-index:200;pointer-events:none}
+#modal-root.open{pointer-events:auto}
+.modal-backdrop{
+  position:absolute;inset:0;background:rgba(17,17,17,.42);
+  opacity:0;transition:opacity .2s ease;backdrop-filter:blur(2px);
+}
+#modal-root.open .modal-backdrop{opacity:1}
+.modal{
+  position:absolute;left:0;right:0;bottom:0;
+  background:#fff;border-radius:22px 22px 0 0;
+  padding:18px 18px calc(20px + env(safe-area-inset-bottom));
+  max-height:88dvh;overflow-y:auto;
+  transform:translateY(100%);transition:transform .26s cubic-bezier(.32,.72,0,1);
+  box-shadow:var(--shadow-3);
+}
+#modal-root.open .modal{transform:translateY(0)}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sheet-title{font-size:16px;font-weight:650;letter-spacing:-.02em}
+@media(min-width:760px){
+  .modal{
+    left:50%;bottom:auto;top:50%;width:min(560px,92vw);
+    border-radius:20px;transform:translate(-50%,-46%) scale(.98);
+    max-height:82dvh;
+  }
+  #modal-root.open .modal{transform:translate(-50%,-50%) scale(1)}
+}
+
+/* ============================================================
+   SPLASH
+   ============================================================ */
+.splash{
+  min-height:100dvh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;background:#fff;position:relative;
+}
+.splash-word{
+  font-size:46px;font-weight:700;letter-spacing:.30em;text-indent:.30em;
+  color:var(--ink);
+}
+.splash-tag{margin-top:12px;font-size:13.5px;color:var(--muted);letter-spacing:.01em}
+.splash-bar{
+  position:absolute;bottom:76px;width:120px;height:2px;background:var(--line-2);
+  border-radius:2px;overflow:hidden;
+}
+.splash-bar i{display:block;height:100%;width:40%;background:var(--ink);border-radius:2px;animation:slide 1.1s ease-in-out infinite}
+@keyframes slide{0%{transform:translateX(-110%)}100%{transform:translateX(310%)}}
+
+/* ============================================================
+   ONBOARDING
+   ============================================================ */
+.onb{min-height:100dvh;display:flex;flex-direction:column;background:#fff;padding-top:env(safe-area-inset-top)}
+.onb-top{display:flex;align-items:center;justify-content:space-between;padding:18px 20px}
+.onb-word{font-size:16px;font-weight:700;letter-spacing:.26em;text-indent:.26em}
+.onb-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 26px;max-width:560px;margin:0 auto;width:100%}
+.onb-icon{
+  width:62px;height:62px;border-radius:18px;background:var(--ink);color:#fff;
+  display:flex;align-items:center;justify-content:center;margin-bottom:26px;
+}
+.onb-title{font-size:30px;font-weight:700;letter-spacing:-.035em;line-height:1.18;margin-bottom:12px}
+.onb-text{font-size:15px;color:var(--muted);line-height:1.6;max-width:420px}
+.onb-foot{padding:0 26px 34px;max-width:560px;margin:0 auto;width:100%}
+.dots{display:flex;gap:6px;margin-bottom:22px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--line);transition:all .2s ease}
+.dots i.on{background:var(--ink);width:20px;border-radius:3px}
+
+/* ============================================================
+   AUTH
+   ============================================================ */
+.auth{min-height:100dvh;display:flex;flex-direction:column;padding:0 24px;max-width:460px;margin:0 auto;width:100%}
+.auth-top{flex:1;display:flex;flex-direction:column;justify-content:center;padding:44px 0 20px}
+.auth-word{font-size:22px;font-weight:700;letter-spacing:.26em;text-indent:.26em;margin-bottom:36px}
+.auth-title{font-size:26px;font-weight:700;letter-spacing:-.035em;line-height:1.22}
+.auth-sub{font-size:14px;color:var(--muted);margin-top:8px}
+.auth-foot{padding-bottom:34px}
+.divider-or{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted-2);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase}
+.divider-or::before,.divider-or::after{content:'';flex:1;height:1px;background:var(--line)}
+.auth-links{display:flex;align-items:center;justify-content:space-between;margin-top:4px;margin-bottom:20px}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.topbar{
+  position:sticky;top:0;z-index:50;background:var(--bg);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:16px 0 6px;
+}
+.wordmark{font-size:17px;font-weight:700;letter-spacing:.28em;text-indent:.28em}
+.topbar-actions{display:flex;align-items:center;gap:4px}
+.bell-wrap{position:relative}
+.bell-dot{
+  position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:50%;
+  background:var(--ink);border:1.5px solid #fff;
+}
+
+/* ============================================================
+   GREETING
+   ============================================================ */
+.greet{padding:6px 0 18px}
+.greet h1{font-size:25px;font-weight:700;letter-spacing:-.035em;line-height:1.25}
+.greet .sub{margin-top:5px}
+
+/* ============================================================
+   STAT CARDS
+   ============================================================ */
+.stat-row{
+  display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.stat-row::-webkit-scrollbar{display:none}
+.stat{
+  flex:0 0 auto;min-width:152px;max-width:190px;
+  text-align:left;background:var(--bg-2);border-radius:var(--radius);
+  padding:14px;display:flex;flex-direction:column;gap:2px;
+  transition:background .16s ease, transform .12s ease;
+}
+.stat:active{transform:scale(.985);background:var(--bg-3)}
+.stat .ic{color:var(--ink-2);margin-bottom:8px}
+.stat-label{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted-2)}
+.stat-value{font-size:16px;font-weight:650;letter-spacing:-.02em;margin-top:2px}
+.stat-meta{font-size:12px;color:var(--muted)}
+
+/* ============================================================
+   CARDS / PANELS
+   ============================================================ */
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.panel.flat{background:var(--bg-2);border-color:transparent}
+
+/* Day selector */
+.day-strip{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none}
+.day-strip::-webkit-scrollbar{display:none}
+.day-pill{
+  flex:1;min-width:46px;height:56px;border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  background:var(--bg-2);color:var(--muted);font-size:12px;font-weight:500;
+  transition:all .16s ease;
+}
+.day-pill b{font-size:14px;font-weight:650;color:var(--ink)}
+.day-pill.on{background:var(--ink);color:rgba(255,255,255,.72)}
+.day-pill.on b{color:#fff}
+
+/* Class row */
+.class-row{
+  display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line-2);
+}
+.class-row:last-child{border-bottom:0;padding-bottom:0}
+.class-time{
+  font-size:12px;font-weight:600;color:var(--ink);white-space:nowrap;
+  min-width:62px;padding-top:1px;font-variant-numeric:tabular-nums;
+}
+.class-body{flex:1;min-width:0}
+.class-code{font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+.class-meta{font-size:12px;color:var(--muted);margin-top:1px}
+.class-accent{width:3px;border-radius:3px;background:var(--ink);flex:0 0 auto;margin:-2px 0}
+
+/* Task row */
+.task-row{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--line-2)}
+.task-row:last-child{border-bottom:0;padding-bottom:0}
+.task-title{font-size:13.5px;font-weight:500;line-height:1.4}
+.task-row.done .task-title{color:var(--muted-2);text-decoration:line-through}
+.task-meta{font-size:11.5px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.prio{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.prio.high{color:#B4242A}
+.prio.medium{color:#8A6A12}
+.prio.low{color:var(--muted)}
+
+/* Progress */
+.progress{height:5px;border-radius:3px;background:var(--bg-3);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--ink);border-radius:3px;transition:width .35s ease}
+
+/* ============================================================
+   POSTS
+   ============================================================ */
+.post{padding:15px 0;border-bottom:1px solid var(--line-2)}
+.post:last-child{border-bottom:0}
+.post-top{display:flex;align-items:flex-start;gap:10px}
+.post-id{flex:1;min-width:0}
+.post-nick{font-size:13.5px;font-weight:650;letter-spacing:-.01em}
+.post-meta{font-size:11.5px;color:var(--muted);margin-top:1px;display:flex;align-items:center;gap:6px}
+.cat-tag{
+  font-size:10.5px;font-weight:600;letter-spacing:.03em;
+  background:var(--bg-2);color:var(--ink-2);padding:1px 7px;border-radius:999px;
+}
+.post-text{font-size:14.5px;line-height:1.55;margin-top:10px;color:var(--ink);white-space:pre-wrap;word-break:break-word}
+.post-actions{display:flex;align-items:center;gap:4px;margin-top:10px}
+.pa{
+  display:inline-flex;align-items:center;gap:6px;
+  height:32px;padding:0 10px;border-radius:999px;
+  font-size:12.5px;color:var(--muted);font-weight:500;
+  transition:all .16s ease;
+}
+.pa:hover{background:var(--bg-2);color:var(--ink)}
+.pa.on{color:var(--ink);font-weight:600}
+.pa.on .ic{fill:var(--ink)}
+.post-expiry{margin-left:auto;font-size:11px;color:var(--muted-2)}
+
+/* Comments */
+.comment{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid var(--line-2)}
+.comment:last-child{border-bottom:0}
+.comment-body{flex:1;min-width:0}
+.comment-text{font-size:13.5px;line-height:1.5;margin-top:3px;word-break:break-word}
+.comment-actions{display:flex;align-items:center;gap:14px;margin-top:6px}
+.comment-actions button{font-size:11.5px;color:var(--muted);font-weight:500;display:inline-flex;align-items:center;gap:4px}
+.comment-actions button.on{color:var(--ink);font-weight:600}
+.comment-actions button.on .ic{fill:var(--ink)}
+.reply{margin-left:38px;border-left:2px solid var(--line);padding-left:12px;margin-top:8px}
+
+/* ============================================================
+   CHIPS / TABS
+   ============================================================ */
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;height:32px;padding:0 13px;border-radius:999px;
+  background:var(--bg-2);color:var(--ink-2);font-size:12.5px;font-weight:500;
+  display:inline-flex;align-items:center;gap:6px;transition:all .16s ease;
+  white-space:nowrap;
+}
+.chip:hover{background:var(--bg-3)}
+.chip.on{background:var(--ink);color:#fff}
+
+.tabs{display:flex;gap:22px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.tab{
+  position:relative;padding:0 0 12px;font-size:13.5px;font-weight:600;color:var(--muted);
+  transition:color .16s ease;
+}
+.tab.on{color:var(--ink)}
+.tab.on::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ink);border-radius:2px}
+
+/* ============================================================
+   PRODUCT / VENDOR CARDS
+   ============================================================ */
+.ph{
+  position:relative;width:100%;aspect-ratio:1/1;border-radius:12px;overflow:hidden;
+  background:var(--bg-3);display:flex;align-items:center;justify-content:center;
+}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph .ph-fb{display:none;font-size:22px;font-weight:700;color:var(--muted-2);letter-spacing:.02em}
+.ph.fail .ph-fb{display:block}
+.ph.fail img{display:none}
+
+.grid-products{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px;
+}
+@media(min-width:640px){.grid-products{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:980px){.grid-products{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+.product{text-align:left;display:flex;flex-direction:column;gap:0;position:relative}
+.product .ph{aspect-ratio:1/1}
+.product-name{font-size:13px;font-weight:550;letter-spacing:-.01em;margin-top:9px;line-height:1.35}
+.product-vendor{font-size:11.5px;color:var(--muted);margin-top:2px}
+.product-price{font-size:13.5px;font-weight:650;margin-top:5px;letter-spacing:-.01em}
+.fav{
+  position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;
+  background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;
+  color:var(--ink);box-shadow:var(--shadow-1);
+}
+.fav.on .ic{fill:var(--ink)}
+
+.vendor-row{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.vendor-row::-webkit-scrollbar{display:none}
+.vendor{
+  flex:0 0 auto;width:148px;text-align:left;
+  background:var(--bg-2);border-radius:var(--radius);padding:12px;
+  transition:background .16s ease, transform .12s ease;
+}
+.vendor:active{transform:scale(.985);background:var(--bg-3)}
+.vendor .ph{aspect-ratio:16/10;border-radius:9px;margin-bottom:9px}
+.vendor-name{font-size:13px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.vendor-meta{font-size:11px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:4px}
+
+/* ============================================================
+   LIST ROWS
+   ============================================================ */
+.list{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.list-row{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  padding:14px 16px;border-bottom:1px solid var(--line-2);
+  transition:background .14s ease;
+}
+.list-row:last-child{border-bottom:0}
+.list-row:hover{background:var(--bg-2)}
+.list-row .ic{color:var(--ink-2);flex:0 0 auto}
+.list-row .chev{margin-left:auto;color:var(--muted-2);flex:0 0 auto}
+.list-label{font-size:14px;font-weight:500;letter-spacing:-.01em}
+.list-sub{font-size:12px;color:var(--muted);margin-top:1px}
+
+/* Quick access */
+.quick-access-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.quick-access-item{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:14px 4px;border-radius:12px;background:var(--bg-2);
+  transition:background .16s ease, transform .12s ease;
+}
+.quick-access-item:active{transform:scale(.97);background:var(--bg-3)}
+.quick-access-item span{font-size:11px;font-weight:500;color:var(--ink-2);text-align:center;line-height:1.25}
+
+/* Empty state */
+.empty{
+  text-align:center;padding:44px 20px;color:var(--muted);
+}
+.empty .ic{margin:0 auto 12px;color:var(--muted-2)}
+.empty h3{font-size:14.5px;font-weight:600;color:var(--ink);margin-bottom:5px}
+.empty p{font-size:13px;max-width:280px;margin:0 auto}
+
+/* Badge */
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10.5px;font-weight:600;letter-spacing:.03em;
+  padding:3px 8px;border-radius:999px;background:var(--bg-2);color:var(--ink-2);
+}
+.badge.verified{background:#111;color:#fff}
+
+/* ============================================================
+   BOTTOM NAV
+   ============================================================ */
+.bottom-nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:70;
+  height:calc(var(--nav-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(255,255,255,.97);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  border-top:1px solid var(--line);
+  display:flex;align-items:stretch;
+}
+.nav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;font-size:10px;font-weight:500;letter-spacing:.01em;color:var(--muted);
+  position:relative;transition:color .16s ease;
+}
+.nav-item .ic{transition:transform .16s ease}
+.nav-item.active{color:var(--ink);font-weight:650}
+.nav-item.active .ic{transform:translateY(-1px)}
+.nav-item.active::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:26px;height:2px;border-radius:0 0 2px 2px;background:var(--ink);
+}
+.nav-item:active{opacity:.65}
+.bottom-nav .nav-item.nav-ai{z-index:1;transform:translateY(-10px)}
+.bottom-nav .nav-item.nav-ai .ic{
+  flex:0 0 54px;width:54px;height:54px;padding:14px;border:4px solid #fff;border-radius:50%;
+  background:var(--ink);color:#fff;box-shadow:0 5px 16px rgba(17,17,17,.22);
+  transform:none;
+}
+.bottom-nav .nav-item.nav-ai.active::before{display:none}
+
+/* ============================================================
+   FAB
+   ============================================================ */
+.fab{
+  position:fixed;right:18px;
+  bottom:calc(var(--nav-h) + 18px + env(safe-area-inset-bottom));
+  z-index:80;
+  width:56px;height:56px;border-radius:50%;
+  background:var(--ink);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 28px rgba(17,17,17,.30);
+  transition:transform .16s ease, background .16s ease;
+}
+.fab:hover{background:#000}
+.fab:active{transform:scale(.94)}
+
+/* ============================================================
+   SIDEBAR (desktop)
+   ============================================================ */
+.sidebar{display:none}
+@media(min-width:900px){
+  .bottom-nav{display:none}
+  .sidebar{
+    display:flex;flex-direction:column;
+    position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);z-index:80;
+    border-right:1px solid var(--line);background:#fff;
+    padding:24px 14px 20px;
+  }
+  .side-word{font-size:19px;font-weight:700;letter-spacing:.28em;text-indent:.28em;padding:0 12px;margin-bottom:26px}
+  .side-nav{display:flex;flex-direction:column;gap:2px;flex:1}
+  .side-nav .nav-item{
+    flex-direction:row;justify-content:flex-start;gap:13px;
+    height:46px;padding:0 12px;border-radius:11px;
+    font-size:14px;font-weight:500;color:var(--ink-2);
+  }
+  .side-nav .nav-item.active{background:var(--bg-2);color:var(--ink);font-weight:650}
+  .side-nav .nav-item.active::before{display:none}
+  .side-nav .nav-item:hover{background:var(--bg-2)}
+  .main-area{margin-left:var(--sidebar-w)}
+  main.page{padding-bottom:40px}
+  .fab{right:28px;bottom:28px}
+  .wrap{padding:0 28px}
+  .toast{bottom:28px}
+}
+
+/* ============================================================
+   AI
+   ============================================================ */
+.ai-banner{
+  display:flex;gap:10px;align-items:flex-start;
+  background:var(--bg-2);border-radius:var(--radius);padding:13px 14px;margin-bottom:18px;
+}
+.ai-banner .ic{color:var(--ink);flex:0 0 auto;margin-top:1px}
+.ai-banner p{font-size:12.5px;color:var(--ink-2);line-height:1.5}
+.chat{display:flex;flex-direction:column;gap:14px;padding:6px 0 20px}
+.msg{display:flex;gap:10px;max-width:92%}
+.msg.me{align-self:flex-end;flex-direction:row-reverse}
+.msg-bubble{
+  background:var(--bg-2);border-radius:14px 14px 14px 4px;padding:11px 14px;
+  font-size:13.5px;line-height:1.55;color:var(--ink);
+}
+.msg.me .msg-bubble{background:var(--ink);color:#fff;border-radius:14px 14px 4px 14px}
+.chat-input-bar{
+  position:sticky;bottom:0;background:#fff;padding:12px 0 4px;border-top:1px solid var(--line);
+  display:flex;gap:8px;align-items:center;
+}
+.ai-page{padding-bottom:calc(var(--nav-h) + 104px + env(safe-area-inset-bottom))}
+.ai-page .chat-input-bar{
+  position:fixed;left:50%;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));
+  transform:translateX(-50%);z-index:60;width:min(100%,720px);
+  padding:12px 18px 8px;border-top:1px solid var(--line);
+}
+.chat-input-bar .input{flex:1}
+@media(min-width:900px){
+  .ai-page{padding-bottom:120px}
+  .ai-page .chat-input-bar{bottom:0;padding:12px 28px 8px}
+}
+
+/* ============================================================
+   MAP
+   ============================================================ */
+.map-card{
+  border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:#F6F6F7;
+}
+.campus-map{width:100%;height:auto;display:block}
+.mpin{cursor:pointer}
+.mpin circle{transition:all .18s ease}
+.mpin.on circle.dot{fill:#111;stroke:#111}
+.mpin.on circle.halo{fill:rgba(17,17,17,.14)}
+.mpin text{font-size:8.5px;font-weight:600;fill:#4A4A4F;font-family:var(--font);pointer-events:none}
+.mpin.on text{fill:#111}
+
+/* ============================================================
+   ACADEMICS FULLSCREEN
+   ============================================================ */
+.fullscreen{min-height:100dvh;display:flex;flex-direction:column;background:#fff}
+.fs-head{
+  position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+  padding:10px 0 0;
+}
+.fs-title-row{display:flex;align-items:center;gap:8px;padding:0 18px 10px}
+.fs-title{font-size:17px;font-weight:650;letter-spacing:-.02em}
+@media(min-width:900px){
+  .fullscreen{margin-left:0}
+  .fs-head .wrap{max-width:820px}
+  .fs-body{max-width:820px;margin:0 auto;width:100%;padding:0 18px 60px}
+}
+
+/* Misc */
+.pill-count{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:18px;height:18px;padding:0 5px;border-radius:999px;
+  background:var(--ink);color:#fff;font-size:10.5px;font-weight:650;
+}
+.stack-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card-line{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line-2)}
+.card-line:last-child{border-bottom:0}
+.tag-line{font-size:11px;color:var(--muted-2);letter-spacing:.03em;text-transform:uppercase;font-weight:600}
+.qty-ctrl{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.qty-ctrl button{width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;color:var(--ink)}
+.qty-ctrl button:hover{background:var(--bg-2)}
+.qty-ctrl span{min-width:26px;text-align:center;font-size:13px;font-weight:600}
+.totals{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.totals b{font-size:19px;font-weight:700;letter-spacing:-.02em}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal-root"></div>
+
+<script>
+/* ============================================================
+   RING — PROTOTYPE
+   ============================================================ */
+
+/* ---------- utilities ---------- */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const naira = n => '₦' + Number(n).toLocaleString('en-NG');
+const nowMs = () => Date.now();
+const H = 3600e3, D = 24 * H;
+
+function timeAgo(ts){
+  const s = (Date.now() - ts) / 1000;
+  if (s < 45) return 'now';
+  if (s < 3600) return Math.floor(s / 60) + 'm';
+  if (s < 86400) return Math.floor(s / 3600) + 'h';
+  const d = Math.floor(s / 86400);
+  if (d < 7) return d + 'd';
+  return Math.floor(d / 7) + 'w';
+}
+function dateLabel(iso){
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+function todayISO(offset = 0){
+  const d = new Date();
+  d.setDate(d.getDate() + offset);
+  return d.toISOString().slice(0, 10);
+}
+function greeting(){
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
+/* ---------- icons (consistent 1.7 stroke outline set) ---------- */
+const ICONS = {
+  home:'<path d="M3.4 10.6 12 3.6l8.6 7"/><path d="M5.7 9.6V20.4h12.6V9.6"/><path d="M9.7 20.4v-5.5h4.6v5.5"/>',
+  feed:'<path d="M20.4 11.6c0 4.2-3.8 7.6-8.4 7.6-1 0-2-.16-2.9-.45L4.1 20.4l1.4-4.1A7.3 7.3 0 0 1 3.6 11.6C3.6 7.4 7.4 4 12 4s8.4 3.4 8.4 7.6Z"/>',
+  explore:'<circle cx="12" cy="12" r="8.5"/><path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/>',
+  ai:'<path d="M11.6 3.6l1.8 4.7 4.7 1.8-4.7 1.8-1.8 4.7-1.8-4.7L5.1 10.1l4.7-1.8 1.8-4.7Z"/><path d="M18.2 15.6l.7 1.7 1.7.7-1.7.7-.7 1.7-.7-1.7-1.7-.7 1.7-.7.7-1.7Z"/>',
+  more:'<rect x="4" y="4" width="6.4" height="6.4" rx="2"/><rect x="13.6" y="4" width="6.4" height="6.4" rx="2"/><rect x="4" y="13.6" width="6.4" height="6.4" rx="2"/><rect x="13.6" y="13.6" width="6.4" height="6.4" rx="2"/>',
+  bell:'<path d="M18 15.7V11a6 6 0 1 0-12 0v4.7L4.4 18h15.2L18 15.7Z"/><path d="M10 20.4a2.2 2.2 0 0 0 4 0"/>',
+  heart:'<path d="M12 20.2S4.7 15.7 4.7 10.9A4.15 4.15 0 0 1 12 8.2a4.15 4.15 0 0 1 7.3 2.7c0 4.8-7.3 9.3-7.3 9.3Z"/>',
+  comment:'<path d="M20.4 11.6c0 4.2-3.8 7.6-8.4 7.6-1 0-2-.16-2.9-.45L4.1 20.4l1.4-4.1A7.3 7.3 0 0 1 3.6 11.6C3.6 7.4 7.4 4 12 4s8.4 3.4 8.4 7.6Z"/>',
+  plus:'<path d="M12 5.2v13.6M5.2 12h13.6"/>',
+  x:'<path d="M6.2 6.2 17.8 17.8M17.8 6.2 6.2 17.8"/>',
+  chevronLeft:'<path d="M14.6 5.4 8 12l6.6 6.6"/>',
+  chevronRight:'<path d="M9.4 5.4 16 12l-6.6 6.6"/>',
+  chevronDown:'<path d="M5.6 9.4 12 15.8l6.4-6.4"/>',
+  search:'<circle cx="11" cy="11" r="6.9"/><path d="M16.1 16.1 21 21"/>',
+  bag:'<path d="M6.4 8h11.2l1 12.2H5.4L6.4 8Z"/><path d="M9.1 8V6.5a2.9 2.9 0 0 1 5.8 0V8"/>',
+  pin:'<path d="M12 20.8s6.4-5.6 6.4-10.1A6.4 6.4 0 0 0 5.6 10.7c0 4.5 6.4 10.1 6.4 10.1Z"/><circle cx="12" cy="10.5" r="2.35"/>',
+  user:'<circle cx="12" cy="8.3" r="3.55"/><path d="M4.9 20.2a7.3 7.3 0 0 1 14.2 0"/>',
+  settings:'<circle cx="12" cy="12" r="3"/><path d="M12 3.4v2.1M12 18.5v2.1M4.9 7.9l1.8 1.05M17.3 15.05l1.8 1.05M4.9 16.1l1.8-1.05M17.3 8.95l1.8-1.05"/>',
+  news:'<path d="M5 5h11.4v14H6.6A1.6 1.6 0 0 1 5 17.4V5Z"/><path d="M16.4 8.6H19v8.9a1.5 1.5 0 0 1-3 0"/><path d="M8 8.6h5.4M8 12h5.4M8 15.4h3.4"/>',
+  calendar:'<rect x="4" y="5.6" width="16" height="14.4" rx="2.4"/><path d="M4 10.1h16M8.5 3.6v3.6M15.5 3.6v3.6"/>',
+  check:'<path d="M5 12.5 9.6 17 19 7.4"/>',
+  checkCircle:'<circle cx="12" cy="12" r="8.5"/><path d="M8.4 12.2 11 14.8l4.6-4.9"/>',
+  circle:'<circle cx="12" cy="12" r="8.5"/>',
+  book:'<path d="M4.6 5.3A2 2 0 0 1 6.6 3.5H19v15.2H6.8a2.2 2.2 0 0 0-2.2 2.2V5.3Z"/><path d="M19 18.7H6.8"/>',
+  bookmark:'<path d="M6.6 4.2h10.8v16.4L12 16.7l-5.4 3.9V4.2Z"/>',
+  send:'<path d="M20.8 3.6 10.4 14M20.8 3.6l-6.7 17L10.4 14 3.6 10.2l17.2-6.6Z"/>',
+  trash:'<path d="M4.8 7h14.4M9.4 7V4.9h5.2V7M6.6 7l.9 12.4h9L17.4 7"/>',
+  edit:'<path d="M4.6 19.4l3.6-.7L19 7.9a2.08 2.08 0 0 0-3-3L5.3 15.8l-.7 3.6Z"/>',
+  phone:'<path d="M7.2 3.9 9.5 8 7.7 9.8a11.6 11.6 0 0 0 6.5 6.5l1.8-1.8 4.1 2.3-.8 3a1.6 1.6 0 0 1-1.7 1.2C10.4 20.3 3.7 13.6 3 5.7a1.6 1.6 0 0 1 1.2-1.7l3-.1Z"/>',
+  star:'<path d="m12 4 2.5 5.2 5.6.8-4.1 4 1 5.6L12 17l-5 2.6 1-5.6-4.1-4 5.6-.8L12 4Z"/>',
+  filter:'<path d="M4 6.4h16M7.2 12h9.6M10.2 17.6h3.6"/>',
+  dots:'<circle cx="5.6" cy="12" r="1.35"/><circle cx="12" cy="12" r="1.35"/><circle cx="18.4" cy="12" r="1.35"/>',
+  arrowRight:'<path d="M4.6 12h14.8M13.4 6l6 6-6 6"/>',
+  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.4V12l3.2 2"/>',
+  logout:'<path d="M14.5 8.1V5.4A1.4 1.4 0 0 0 13.1 4H5.4A1.4 1.4 0 0 0 4 5.4v13.2A1.4 1.4 0 0 0 5.4 20h7.7a1.4 1.4 0 0 0 1.4-1.4v-2.7"/><path d="M9.6 12h11M17.2 8.4 20.8 12l-3.6 3.6"/>',
+  shield:'<path d="M12 3.3 19 5.7v6c0 4.3-3 7.5-7 9-4-1.5-7-4.7-7-9v-6l7-2.4Z"/><path d="M8.9 11.8 11 13.9l4.1-4.3"/>',
+  download:'<path d="M12 4.2v10.4M7.9 10.7 12 14.8l4.1-4.1"/><path d="M4.9 17.4v1.4A1.4 1.4 0 0 0 6.3 20.2h11.4a1.4 1.4 0 0 0 1.4-1.4v-1.4"/>',
+  tag:'<path d="M4.6 11.2V5.3a.7.7 0 0 1 .7-.7h5.9l8.6 8.6-7.1 7.1-8.1-9.1Z"/><circle cx="8.4" cy="8.4" r="1.3"/>',
+  users:'<circle cx="9.2" cy="8.6" r="3.2"/><path d="M3.8 19.6a5.4 5.4 0 0 1 10.8 0"/><path d="M15.9 5.9a3.2 3.2 0 0 1 0 5.6M17.2 14.7a5.4 5.4 0 0 1 3.1 4.9"/>',
+  image:'<rect x="4" y="4.6" width="16" height="14.8" rx="2.4"/><circle cx="9" cy="9.6" r="1.55"/><path d="M4.7 16.7 9.4 12l3.4 3.2 2.5-2.3 4 3.8"/>',
+  layers:'<path d="m12 3.6 8 4.2-8 4.2-8-4.2 8-4.2Z"/><path d="m4 12.4 8 4.2 8-4.2"/><path d="m4 16.6 8 4.2 8-4.2"/>',
+  wifi:'<path d="M3.6 9.2a13 13 0 0 1 16.8 0M6.6 12.5a8.6 8.6 0 0 1 10.8 0M9.6 15.8a4.2 4.2 0 0 1 4.8 0"/><circle cx="12" cy="19" r="1.1"/>'
+};
+function icon(name, size = 22, cls = ''){
+  return `<svg class="ic ${cls}" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"
+    aria-hidden="true">${ICONS[name] || ''}</svg>`;
+}
+
+/* ============================================================
+   SEED DATA
+   ============================================================ */
+const DEMO_USER = {
+  id: 'u1',
+  name: 'Khalifah Adeyemi',
+  nick: 'khalifah',
+  initials: 'KA',
+  uni: 'Bells University of Technology',
+  dept: 'Computer Science',
+  level: '400 Level',
+  matric: 'BU/21/CSC/0142',
+  verified: true,
+  email: 'khalifah.adeyemi@bells.demo'
+};
+
+function seedClasses(){
+  return [
+    { id:'c1', day:1, start:'08:00', end:'10:00', code:'CSC 401', title:'Compiler Design', venue:'LT 2' },
+    { id:'c2', day:1, start:'10:00', end:'12:00', code:'CSC 405', title:'Database Systems', venue:'CS Lab 1' },
+    { id:'c3', day:2, start:'09:00', end:'11:00', code:'CSC 403', title:'Software Engineering', venue:'LT 1' },
+    { id:'c4', day:2, start:'14:00', end:'16:00', code:'GST 401', title:'Entrepreneurship', venue:'Main Auditorium' },
+    { id:'c5', day:3, start:'08:00', end:'10:00', code:'CSC 407', title:'Artificial Intelligence', venue:'LT 3' },
+    { id:'c6', day:3, start:'12:00', end:'14:00', code:'CSC 405', title:'Database Systems Lab', venue:'CS Lab 2' },
+    { id:'c7', day:4, start:'10:00', end:'12:00', code:'CSC 409', title:'Computer Networks', venue:'LT 2' },
+    { id:'c8', day:5, start:'09:00', end:'11:00', code:'CSC 401', title:'Compiler Design Lab', venue:'CS Lab 1' }
+  ];
+}
+function seedTasks(){
+  return [
+    { id:'t1', title:'Database assignment — ER diagram', course:'CSC 405', due: todayISO(2), priority:'high', done:false },
+    { id:'t2', title:'Read Compiler Design — Chapter 4', course:'CSC 401', due: todayISO(1), priority:'medium', done:false },
+    { id:'t3', title:'Submit Entrepreneurship group report', course:'GST 401', due: todayISO(5), priority:'high', done:false },
+    { id:'t4', title:'Networks lab write-up', course:'CSC 409', due: todayISO(3), priority:'low', done:true },
+    { id:'t5', title:'Past questions — AI mid-semester', course:'CSC 407', due: todayISO(6), priority:'medium', done:false }
+  ];
+}
+function seedResources(){
+  return [
+    { id:'r1', code:'CSC 405', title:'Database Systems', level:'400', dept:'Computer Science', sem:'First', type:'Past Questions', file:'CSC405_PastQuestions_2023.pdf', by:'tee_xxl', date:'2024-11-02' },
+    { id:'r2', code:'CSC 401', title:'Compiler Design', level:'400', dept:'Computer Science', sem:'First', type:'Lecture Notes', file:'CSC401_LexicalAnalysis_Notes.pdf', by:'amarachi', date:'2024-11-08' },
+    { id:'r3', code:'CSC 407', title:'Artificial Intelligence', level:'400', dept:'Computer Science', sem:'First', type:'Slides', file:'CSC407_SearchAlgorithms_Slides.pdf', by:'ibk', date:'2024-10-21' },
+    { id:'r4', code:'GST 401', title:'Entrepreneurship', level:'400', dept:'General Studies', sem:'First', type:'Past Questions', file:'GST401_PastQuestions_2022.pdf', by:'zainab', date:'2024-10-30' },
+    { id:'r5', code:'CSC 409', title:'Computer Networks', level:'400', dept:'Computer Science', sem:'First', type:'Textbook', file:'CSC409_Kurose_Ross_Ch3.pdf', by:'danjuma', date:'2024-11-11' },
+    { id:'r6', code:'CSC 403', title:'Software Engineering', level:'400', dept:'Computer Science', sem:'First', type:'Lecture Notes', file:'CSC403_Agile_Notes.pdf', by:'praise', date:'2024-11-14' },
+    { id:'r7', code:'CSC 305', title:'Operating Systems', level:'300', dept:'Computer Science', sem:'Second', type:'Past Questions', file:'CSC305_PastQuestions_2023.pdf', by:'seyi', date:'2024-06-04' },
+    { id:'r8', code:'MTH 401', title:'Numerical Analysis', level:'400', dept:'Mathematics', sem:'First', type:'Lecture Notes', file:'MTH401_Interpolation_Notes.pdf', by:'tee_xxl', date:'2024-11-01' }
+  ];
+}
+function seedPosts(){
+  const t = nowMs();
+  return [
+    {
+      id:'p1', nick:'tee_xxl', initials:'TX', cat:'Campus Gist',
+      text:"Anyone else notice the Wi-Fi around the College of Computing dropping every afternoon this week? I've had to resubmit an assignment twice already.",
+      createdAt: t - 0.6*H, likes: 38, liked:false,
+      comments:[
+        { id:'c1', nick:'amarachi', initials:'AM', text:'Same here. It comes back around 4pm but it is basically unusable before then.', createdAt: t-0.4*H, likes:6, liked:false, replies:[
+          { id:'c1r1', nick:'tee_xxl', initials:'TX', text:'Exactly the same window. ICT should really look at the access points on that side.', createdAt: t-0.3*H, likes:2, liked:false }
+        ]},
+        { id:'c2', nick:'danjuma', initials:'DJ', text:'Reported it at the ICT Centre this morning. They said a switch is being replaced.', createdAt: t-0.2*H, likes:9, liked:false, replies:[] }
+      ]
+    },
+    {
+      id:'p2', nick:'amarachi', initials:'AM', cat:'Questions',
+      text:"Best place to get lunch around Bells right now? I've done cafeteria rice for a week straight and I need options.",
+      createdAt: t - 2.2*H, likes: 21, liked:false,
+      comments:[
+        { id:'c3', nick:'praise', initials:'PR', text:'Auntie Bose behind the female hostel. Jollof is solid and she is fast.', createdAt: t-1.8*H, likes:11, liked:false, replies:[] },
+        { id:'c4', nick:'seyi', initials:'SY', text:'There is a small shawarma spot near the ICT Centre too. ₦2,000 and it is filling.', createdAt: t-1.4*H, likes:5, liked:false, replies:[] }
+      ]
+    },
+    {
+      id:'p3', nick:'khalifah', initials:'KA', cat:'Discussions',
+      text:"CSC 401 — anyone taking it this semester? Thinking we set up a small study group for the compiler design part before the mid-semester.",
+      createdAt: t - 5*H, likes: 14, liked:false,
+      comments:[
+        { id:'c5', nick:'ibk', initials:'IB', text:'I am in. The parsing section is where I lost track.', createdAt: t-4.2*H, likes:3, liked:false, replies:[] }
+      ]
+    },
+    {
+      id:'p4', nick:'danjuma', initials:'DJ', cat:'Campus Gist',
+      text:"Found a black wallet on the second floor of the library this morning. I handed it to the attendant at the front desk. If it's yours, go with a description.",
+      createdAt: t - 8*H, likes: 57, liked:false, comments:[]
+    },
+    {
+      id:'p5', nick:'zainab', initials:'ZN', cat:'Questions',
+      text:"Does anyone know if the 300 level Entrepreneurship test has been moved? I heard it is now Thursday but nothing on the notice board.",
+      createdAt: t - 11*H, likes: 9, liked:false, comments:[
+        { id:'c6', nick:'praise', initials:'PR', text:'Our rep said Thursday, same venue. Waiting for the official notice though.', createdAt: t-10*H, likes:4, liked:false, replies:[] }
+      ]
+    },
+    {
+      id:'p6', nick:'seyi', initials:'SY', cat:'Discussions',
+      text:"The new shuttle route from the main gate to the hostel is actually a big improvement. Saves me about fifteen minutes every morning.",
+      createdAt: t - 20*H, likes: 33, liked:false, comments:[]
+    },
+    {
+      id:'p7', nick:'praise', initials:'PR', cat:'Campus Gist',
+      text:"There's a small business fair behind the cafeteria today. A couple of vendors are selling sneakers and phone accessories at decent prices.",
+      createdAt: t - 26*H, likes: 25, liked:false, comments:[
+        { id:'c7', nick:'khalifah', initials:'KA', text:'Any idea how long they are staying? Might pass after my 2pm class.', createdAt: t-25*H, likes:1, liked:false, replies:[] }
+      ]
+    },
+    {
+      id:'p8', nick:'ibk', initials:'IB', cat:'Questions',
+      text:"Anyone have past questions for Database Systems (CSC 405)? Willing to trade for CSC 407 slides.",
+      createdAt: t - 31*H, likes: 12, liked:false, comments:[]
+    }
+  ];
+}
+function seedNotifications(){
+  const t = nowMs();
+  return [
+    { id:'no1', text:'tee_xxl liked your post about CSC 401.', time: t - 18*60000, read:false, type:'like' },
+    { id:'no2', text:'ibk commented on your post in Campus Feed.', time: t - 52*60000, read:false, type:'comment' },
+    { id:'no3', text:'CSC 401 — Compiler Design starts in 30 minutes at LT 2.', time: t - 2*H, read:false, type:'class' },
+    { id:'no4', text:'Database assignment (CSC 405) is due in 2 days.', time: t - 6*H, read:true, type:'task' },
+    { id:'no5', text:'New resource shared: CSC 409 — Kurose & Ross Chapter 3.', time: t - 22*H, read:true, type:'resource' },
+    { id:'no6', text:'Your student verification was approved.', time: t - 3*D, read:true, type:'verify' }
+  ];
+}
+function seedNews(){
+  const t = nowMs();
+  return [
+    { id:'n1', title:'Second semester course registration closes Friday', body:'The Registry has confirmed that course registration for the second semester closes at 11:59 PM on Friday. Students who have not completed registration will not be eligible for examinations.', source:'Registry', tag:'Academic', time: t - 3*H },
+    { id:'n2', title:'Library extends opening hours during examination period', body:'The University Library will remain open until 11:00 PM from Monday to Saturday throughout the examination period. The e-library portal remains available 24 hours a day.', source:'University Library', tag:'Notice', time: t - 9*H },
+    { id:'n3', title:'ICT Centre schedules network maintenance on the science axis', body:'Network maintenance affecting the College of Science and the College of Computing is scheduled for Thursday between 1:00 PM and 4:00 PM. Intermittent connectivity should be expected.', source:'ICT Centre', tag:'Notice', time: t - 1.2*D },
+    { id:'n4', title:'Students’ Union announces career fair for final year students', body:'The Students’ Union will host the annual career fair in the Main Auditorium next Wednesday. Over twenty organisations have confirmed attendance, including technology and manufacturing firms.', source:'Students’ Union', tag:'Event', time: t - 2*D },
+    { id:'n5', title:'Examination timetable for first semester released', body:'The first semester examination timetable has been published. Students are advised to confirm their course codes and venues ahead of the examination period.', source:'Examinations Office', tag:'Academic', time: t - 3.4*D },
+    { id:'n6', title:'Shuttle service adds an additional morning route', body:'The transport unit has added an additional morning shuttle between the main gate and the hostels, departing every twenty minutes between 6:40 AM and 8:00 AM.', source:'Transport Unit', tag:'Campus', time: t - 5*D }
+  ];
+}
+const VENDORS = [
+  { id:'v1', name:'Auntie Bose Kitchen', cat:'Food', loc:'Behind Female Hostel', desc:'Home-cooked meals, jollof, small chops and cold drinks. Ready in under ten minutes.', img:'1546069901-ba9599a7e63c', wa:'2348000000001' },
+  { id:'v2', name:'Sole Lab', cat:'Sneakers', loc:'College of Science Car Park', desc:'Authentic and pre-loved sneakers. Sizes 40 to 46. Verified on campus since 2022.', img:'1542291026-7eec264c27ff', wa:'2348000000002' },
+  { id:'v3', name:'Thrift by Dami', cat:'Fashion', loc:'Hostel B Block', desc:'Carefully selected thrift pieces — jackets, hoodies and denim. New drops every Friday.', img:'1523381210434-271e8be1f52b', wa:'2348000000003' },
+  { id:'v4', name:'TechHub Bells', cat:'Gadgets', loc:'Beside the Library', desc:'Headphones, smart watches and accessories with a two-week swap guarantee.', img:'1505740420928-5e560c06d30e', wa:'2348000000004' },
+  { id:'v5', name:'Glow Room', cat:'Beauty', loc:'Student Union Building', desc:'Body care, skincare and lip kits. All products sealed and sourced locally.', img:'1585386959984-a4155224a1ad', wa:'2348000000005' },
+  { id:'v6', name:'Bells Print & Design', cat:'Services', loc:'ICT Centre', desc:'Printing, binding, laminating and project design. Same-day turnaround on most jobs.', img:'1517842645767-c639042777db', wa:'2348000000006' }
+];
+const PRODUCTS = [
+  { id:'p1', name:'Jollof Rice & Grilled Chicken', vendor:'v1', price:2500, cat:'Food', img:'1546069901-ba9599a7e63c', desc:'Smoky party-style jollof with grilled chicken, fried plantain and a side of coleslaw. Served hot in a takeaway pack.', stock:'Available now' },
+  { id:'p2', name:'Beef Shawarma', vendor:'v1', price:2000, cat:'Food', img:'1568901346375-23c9450c58cd', desc:'Grilled beef strips, cabbage, onions and house sauce wrapped in a warm flatbread.', stock:'Available now' },
+  { id:'p3', name:'Small Chops Party Pack', vendor:'v1', price:3500, cat:'Food', img:'1504674900247-0877df9cc836', desc:'Puff-puff, samosa, spring rolls and peppered gizzard in one sharing pack. Feeds two to three people.', stock:'Available now' },
+  { id:'p4', name:"Nike Air Force 1 '07", vendor:'v2', price:48000, cat:'Sneakers', img:'1542291026-7eec264c27ff', desc:'Clean white leather upper, size UK 9. Worn twice, no creasing. Comes with the original box.', stock:'1 left in stock' },
+  { id:'p5', name:'Adidas Ultraboost 22', vendor:'v2', price:52000, cat:'Sneakers', img:'1552346154-21d32810aba3', desc:'Black and grey knit upper with a responsive boost midsole. Size UK 10.', stock:'2 left in stock' },
+  { id:'p6', name:'New Balance 550', vendor:'v2', price:39500, cat:'Sneakers', img:'1600185365483-26d7a4cc7519', desc:'Cream and navy colourway, size UK 8.5. Brand new, never worn outdoors.', stock:'Available now' },
+  { id:'p7', name:'Vintage Denim Jacket', vendor:'v3', price:12500, cat:'Fashion', img:'1523381210434-271e8be1f52b', desc:'Washed indigo denim, slightly oversized fit. Fits medium to large comfortably.', stock:'1 left in stock' },
+  { id:'p8', name:'Oversized Fleece Hoodie', vendor:'v3', price:8500, cat:'Fashion', img:'1556821840-3a63f95609a7', desc:'Heavyweight grey fleece with a brushed interior. Unisex, fits medium.', stock:'3 left in stock' },
+  { id:'p9', name:'Wireless Over-Ear Headphones', vendor:'v4', price:28000, cat:'Gadgets', img:'1505740420928-5e560c06d30e', desc:'Active noise cancelling, 30-hour battery life and a foldable frame. Charging cable included.', stock:'Available now' },
+  { id:'p10', name:'Smart Watch Series 6', vendor:'v4', price:34000, cat:'Gadgets', img:'1523275335684-37898b6baf30', desc:'Fitness tracking, heart-rate monitoring and message notifications. Compatible with Android and iOS.', stock:'2 left in stock' },
+  { id:'p11', name:'Shea Body Butter Set', vendor:'v5', price:6500, cat:'Beauty', img:'1585386959984-a4155224a1ad', desc:'Three-piece shea and cocoa butter set, unscented and suitable for sensitive skin.', stock:'Available now' },
+  { id:'p12', name:'Matte Lip Kit', vendor:'v5', price:4200, cat:'Beauty', img:'1596462502278-27bfdc403348', desc:'Long-wear matte liquid lipstick with a matching liner. Four shades available.', stock:'Available now' },
+  { id:'p13', name:'Polarised Sunglasses', vendor:'v3', price:9000, cat:'Accessories', img:'1572635196237-14b3f281503f', desc:'Lightweight metal frame with polarised lenses. Includes a hard case and cloth.', stock:'Available now' },
+  { id:'p14', name:'Leather Card Holder', vendor:'v3', price:5500, cat:'Accessories', img:'1560343090-f0409e92791a', desc:'Compact genuine leather card holder with six slots and a note compartment.', stock:'Available now' },
+  { id:'p15', name:'Project Printing (50 pages)', vendor:'v6', price:1500, cat:'Services', img:'', desc:'Black and white printing on 80gsm paper, spiral binding included. Ready within twenty minutes.', stock:'Same-day service' },
+  { id:'p16', name:'Document Binding & Lamination', vendor:'v6', price:2500, cat:'Services', img:'', desc:'Hard cover binding with laminated front page. Suitable for project submissions.', stock:'Same-day service' }
+];
+const MAP_LOCATIONS = [
+  { id:'gate', name:'Main Gate', x:36, y:246, desc:'Primary entrance to the university. Security post and shuttle pickup point.' },
+  { id:'lib', name:'University Library', x:104, y:66, desc:'Open 8:00 AM – 10:00 PM on weekdays. E-library available around the clock.' },
+  { id:'csc', name:'College of Computing', x:262, y:64, desc:'Computer Science, Information Technology and Cyber Security departments.' },
+  { id:'cafe', name:'Cafeteria', x:64, y:162, desc:'Main student dining area. Opens 7:00 AM, closes 8:00 PM.' },
+  { id:'senate', name:'Senate Building', x:300, y:140, desc:'Administrative offices, Registry and the Vice-Chancellor’s office.' },
+  { id:'ict', name:'ICT Centre', x:196, y:196, desc:'Network services, printing and the student support desk.' },
+  { id:'hostel', name:'Female Hostel', x:330, y:248, desc:'Residence blocks A–D. Visitor hours end at 8:00 PM.' },
+  { id:'sport', name:'Sports Complex', x:92, y:230, desc:'Football pitch, basketball court and the indoor games hall.' }
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const KEY = 'ring.prototype.v1';
+let state = null;
+
+function defaultState(){
+  return {
+    phase: 'splash',
+    seenOnboarding: false,
+    user: null,
+    view: 'home',
+    params: {},
+    posts: seedPosts(),
+    classes: seedClasses(),
+    tasks: seedTasks(),
+    resources: seedResources(),
+    notifications: seedNotifications(),
+    news: seedNews(),
+    cart: [],
+    savedProducts: [],
+    savedResources: [],
+    prefs: { push: true, email: true, digest: false },
+    feedSort: 'foryou',
+    feedFilter: 'all',
+    aiMessages: [],
+    aiDraft: '',
+    search: '',
+    exploreCat: 'All',
+    homeDay: null,
+    homeFeaturesExpanded: false,
+    academicsTab: 'timetable',
+    academicsDay: 1,
+    academicsResFilter: { dept: 'All', level: 'All', sem: 'All' },
+    draftComment: ''
+  };
+}
+function save(){
+  try {
+    const persist = {
+      seenOnboarding: state.seenOnboarding,
+      user: state.user,
+      posts: state.posts,
+      classes: state.classes,
+      tasks: state.tasks,
+      resources: state.resources,
+      notifications: state.notifications,
+      cart: state.cart,
+      savedProducts: state.savedProducts,
+      savedResources: state.savedResources,
+      prefs: state.prefs
+    };
+    localStorage.setItem(KEY, JSON.stringify(persist));
+  } catch(e){ /* storage unavailable — prototype continues in memory */ }
+}
+function load(){
+  state = defaultState();
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw){
+      const p = JSON.parse(raw);
+      Object.assign(state, p);
+      if (!state.posts || !state.posts.length) state.posts = seedPosts();
+      if (!state.classes) state.classes = seedClasses();
+      if (!state.tasks) state.tasks = seedTasks();
+      if (!state.resources) state.resources = seedResources();
+      if (!state.notifications) state.notifications = seedNotifications();
+      if (!state.prefs) state.prefs = { push:true, email:true, digest:false };
+    }
+  } catch(e){ state = defaultState(); }
+}
+
+/* ---------- toast ---------- */
+let toastTimer = null;
+function toast(msg){
+  let el = $('.toast');
+  if (!el){ el = document.createElement('div'); el.className = 'toast'; document.body.appendChild(el); }
+  el.textContent = msg;
+  requestAnimationFrame(() => el.classList.add('show'));
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+/* ---------- modal ---------- */
+function openModal(html){
+  const r = $('#modal-root');
+  r.innerHTML = `<div class="modal-backdrop" data-act="close-modal"></div><div class="modal">${html}</div>`;
+  document.body.classList.add('modal-open');
+  requestAnimationFrame(() => r.classList.add('open'));
+}
+function closeModal(){
+  const r = $('#modal-root');
+  r.classList.remove('open');
+  document.body.classList.remove('modal-open');
+  setTimeout(() => { if (!r.classList.contains('open')) r.innerHTML = ''; }, 200);
+}
+function confirmDialog(title, message, confirmLabel, onConfirm){
+  openModal(`
+    <div class="sheet-head"><div class="sheet-title">${esc(title)}</div></div>
+    <p class="sub" style="margin-bottom:20px">${esc(message)}</p>
+    <div class="row" style="gap:10px">
+      <button class="btn ghost grow" data-act="close-modal">Cancel</button>
+      <button class="btn primary grow" id="confirm-yes">${esc(confirmLabel)}</button>
+    </div>
+  `);
+  $('#confirm-yes').addEventListener('click', () => { closeModal(); onConfirm(); });
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+const NAV_ITEMS = [
+  { view:'home',    label:'Home',    icon:'home' },
+  { view:'explore', label:'Explore', icon:'explore' },
+  { view:'ai',      label:'AI',      icon:'ai' },
+  { view:'feed',    label:'Feed',    icon:'feed' },
+  { view:'more',    label:'More',    icon:'more' }
+];
+const MORE_CHILDREN = ['more','news','map','profile','settings','notifications'];
+const EXPLORE_CHILDREN = ['explore','store','product','cart'];
+
+function activeNavFor(view){
+  if (MORE_CHILDREN.includes(view)) return 'more';
+  if (EXPLORE_CHILDREN.includes(view)) return 'explore';
+  return view;
+}
+function go(view, params){
+  state.view = view;
+  state.params = params || {};
+  if (view === 'academics' && params && params.tab) state.academicsTab = params.tab;
+  render();
+  window.scrollTo({ top:0, behavior:'instant' in window ? 'instant' : 'auto' });
+}
+
+/* ============================================================
+   RENDER — ROOT
+   ============================================================ */
+function render(){
+  const root = $('#app');
+  if (state.phase === 'splash'){ renderSplash(root); return; }
+  if (state.phase === 'onboarding'){ renderOnboarding(root); return; }
+  if (state.phase === 'auth'){ renderAuth(root); return; }
+  if (state.phase === 'kyc'){ renderKyc(root); return; }
+  renderApp(root);
+}
+
+/* ---------- splash ---------- */
+function renderSplash(root){
+  root.innerHTML = `
+    <div class="splash">
+      <div style="text-align:center">
+        <div class="splash-word">RING</div>
+        <div class="splash-tag">Everyday life in Bells.</div>
+      </div>
+      <div class="splash-bar"><i></i></div>
+    </div>`;
+}
+
+/* ---------- onboarding ---------- */
+const PILLARS = [
+  { icon:'bag', title:'Marketplace', text:'Discover student businesses, shop around campus and order from vendors you can actually walk to.' },
+  { icon:'book', title:'Academics', text:'Organise your timetable, track every task and deadline, and find the resources your course actually needs.' },
+  { icon:'users', title:'Community', text:'Stay connected with campus updates, discussions and the conversations happening around you.' }
+];
+let onbIndex = 0;
+function renderOnboarding(root){
+  const p = PILLARS[onbIndex];
+  const last = onbIndex === PILLARS.length - 1;
+  root.innerHTML = `
+    <div class="onb">
+      <div class="onb-top">
+        <div class="onb-word">RING</div>
+        <button class="btn-link" data-act="skip-onboarding">Skip</button>
+      </div>
+      <div class="onb-body">
+        <div class="onb-icon">${icon(p.icon, 28)}</div>
+        <h1 class="onb-title">${esc(p.title)}</h1>
+        <p class="onb-text">${esc(p.text)}</p>
+      </div>
+      <div class="onb-foot">
+        <div class="dots">${PILLARS.map((_, i) => `<i class="${i === onbIndex ? 'on' : ''}"></i>`).join('')}</div>
+        <button class="btn primary block" data-act="onb-next">${last ? 'Get Started' : 'Continue'}</button>
+      </div>
+    </div>`;
+}
+
+/* ---------- auth ---------- */
+function renderAuth(root){
+  root.innerHTML = `
+    <div class="auth">
+      <div class="auth-top">
+        <div class="auth-word">RING</div>
+        <h1 class="auth-title">Welcome back.</h1>
+        <p class="auth-sub">Sign in to continue to your campus ecosystem.</p>
+        <form data-form="login" style="margin-top:28px">
+          <div class="field">
+            <label for="auth-email">Email address</label>
+            <input class="input" id="auth-email" name="email" type="email" placeholder="you@bells.edu.ng" autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="auth-pass">Password</label>
+            <input class="input" id="auth-pass" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" />
+          </div>
+          <div class="auth-links">
+            <span class="xs muted">New to Ring?</span>
+            <button type="button" class="btn-link" data-act="toast-signup">Create account</button>
+          </div>
+          <button class="btn primary block" type="submit">Sign in</button>
+        </form>
+        <div class="divider-or">or</div>
+        <button class="btn outline block" data-act="demo-login">Continue with demo account</button>
+        <p class="xs muted" style="text-align:center;margin-top:14px;line-height:1.5">
+          The demo account is pre-verified and populated with realistic student data.
+        </p>
+      </div>
+      <div class="auth-foot">
+        <button class="btn-link" data-act="forgot" style="display:block;margin:0 auto;color:var(--muted);font-weight:500">Forgot password?</button>
+      </div>
+    </div>`;
+}
+
+/* ---------- KYC ---------- */
+function renderKyc(root){
+  const u = state.kycDraft || {
+    name:'', nick:'', uni:'Bells University of Technology',
+    dept:'Computer Science', level:'400 Level', matric:''
+  };
+  const depts = ['Computer Science','Information Technology','Cyber Security','Software Engineering','Accounting','Business Administration','Mass Communication','Biochemistry','Microbiology','Mechanical Engineering','Electrical Engineering','Civil Engineering','Architecture','Law'];
+  const levels = ['100 Level','200 Level','300 Level','400 Level','500 Level'];
+  root.innerHTML = `
+    <div class="auth" style="max-width:520px">
+      <div class="auth-top" style="padding-top:40px">
+        <div class="auth-word">RING</div>
+        <h1 class="auth-title">Student verification</h1>
+        <p class="auth-sub">Confirm your student details to unlock the Ring campus experience.</p>
+
+        <div class="panel flat" style="margin-top:22px;display:flex;gap:12px;align-items:flex-start">
+          ${icon('shield', 20)}
+          <div>
+            <div class="h3">Demo verification</div>
+            <p class="xs muted" style="margin-top:3px;line-height:1.5">This prototype does not request identity documents. Completing this form verifies the demo student instantly.</p>
+          </div>
+        </div>
+
+        <form data-form="kyc" style="margin-top:22px">
+          <div class="field">
+            <label>Full name</label>
+            <input class="input" name="name" value="${esc(u.name)}" placeholder="e.g. Khalifah Adeyemi" required />
+          </div>
+          <div class="field">
+            <label>Preferred nickname</label>
+            <input class="input" name="nick" value="${esc(u.nick)}" placeholder="e.g. khalifah" required />
+          </div>
+          <div class="field">
+            <label>University</label>
+            <select class="select" name="uni">
+              <option>Bells University of Technology</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Department</label>
+            <select class="select" name="dept">
+              ${depts.map(d => `<option ${d === u.dept ? 'selected' : ''}>${d}</option>`).join('')}
+            </select>
+          </div>
+          <div class="field">
+            <label>Academic level</label>
+            <select class="select" name="level">
+              ${levels.map(l => `<option ${l === u.level ? 'selected' : ''}>${l}</option>`).join('')}
+            </select>
+          </div>
+          <div class="field">
+            <label>Matriculation number</label>
+            <input class="input" name="matric" value="${esc(u.matric)}" placeholder="BU/21/CSC/0142" required />
+          </div>
+          <button class="btn primary block" type="submit">Complete verification</button>
+        </form>
+        <p class="xs muted" style="text-align:center;margin-top:14px">Verification status: <strong style="color:#111">Pending</strong> · Demo data only</p>
+      </div>
+      <div class="auth-foot"></div>
+    </div>`;
+}
+
+/* ============================================================
+   RENDER — APP SHELL
+   ============================================================ */
+function renderApp(root){
+  const view = state.view;
+  let body = '';
+
+  switch(view){
+    case 'home':          body = viewHome(); break;
+    case 'feed':          body = viewFeed(); break;
+    case 'explore':       body = viewExplore(); break;
+    case 'ai':            body = viewAI(); break;
+    case 'more':          body = viewMore(); break;
+    case 'news':          body = viewNews(); break;
+    case 'map':           body = viewMap(); break;
+    case 'profile':       body = viewProfile(); break;
+    case 'settings':      body = viewSettings(); break;
+    case 'notifications': body = viewNotifications(); break;
+    case 'store':         body = viewStore(); break;
+    case 'product':       body = viewProduct(); break;
+    case 'cart':          body = viewCart(); break;
+    case 'academics':     root.innerHTML = viewAcademics(); afterRender(); return;
+    default:              body = viewHome();
+  }
+
+  const active = activeNavFor(view);
+  root.innerHTML = `
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="side-word">RING</div>
+        <nav class="side-nav">
+          ${NAV_ITEMS.map(n => `
+            <button class="nav-item ${active === n.view ? 'active' : ''} ${n.view === 'ai' ? 'nav-ai' : ''}" data-act="nav" data-view="${n.view}">
+              ${icon(n.icon, 21)}<span>${n.label}</span>
+            </button>`).join('')}
+        </nav>
+        <div style="border-top:1px solid var(--line);padding-top:12px">
+          <button class="nav-item" data-act="nav" data-view="profile" style="flex-direction:row;gap:11px;justify-content:flex-start;height:52px;padding:0 10px;border-radius:11px;width:100%">
+            <span class="avatar sm">${esc(state.user ? state.user.initials : 'K')}</span>
+            <span style="text-align:left">
+              <span style="display:block;font-size:13px;font-weight:600">@${esc(state.user ? state.user.nick : 'student')}</span>
+              <span style="display:block;font-size:11px;color:var(--muted)">${esc(state.user ? state.user.level : '')}</span>
+            </span>
+          </button>
+        </div>
+      </aside>
+      <div class="main-area">${body}</div>
+      <nav class="bottom-nav">
+        ${NAV_ITEMS.map(n => `
+          <button class="nav-item ${active === n.view ? 'active' : ''} ${n.view === 'ai' ? 'nav-ai' : ''}" data-act="nav" data-view="${n.view}" aria-label="${n.label}">
+            ${icon(n.icon, 21)}<span>${n.label}</span>
+          </button>`).join('')}
+      </nav>
+      ${view === 'feed' ? `<button class="fab" data-act="open-composer" aria-label="Create post">${icon('plus', 24)}</button>` : ''}
+    </div>`;
+
+  afterRender();
+}
+
+/* ============================================================
+   VIEW — HOME
+   ============================================================ */
+function todayDayIndex(){
+  const d = new Date().getDay();
+  return d === 0 || d === 6 ? 1 : d;
+}
+function classesForDay(day){
+  return state.classes.filter(c => c.day === day).sort((a, b) => a.start.localeCompare(b.start));
+}
+function nextClassInfo(){
+  const today = todayDayIndex();
+  for (let offset = 0; offset < 5; offset++){
+    const day = ((today - 1 + offset) % 5) + 1;
+    const list = classesForDay(day);
+    if (!list.length) continue;
+    if (offset === 0){
+      const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+      const upcoming = list.find(c => {
+        const [h, m] = c.start.split(':').map(Number);
+        return h * 60 + m >= nowMin;
+      });
+      if (upcoming) return { cls: upcoming, day, isToday: true };
+      continue;
+    }
+    return { cls: list[0], day, isToday: false };
+  }
+  const fallback = state.classes[0];
+  return fallback ? { cls: fallback, day: fallback.day, isToday:false } : null;
+}
+const DAY_NAMES = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+const DAY_FULL  = ['', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+function viewHome(){
+  const u = state.user;
+  const nc = nextClassInfo();
+  const pending = state.tasks.filter(t => !t.done);
+  const doneCount = state.tasks.length - pending.length;
+  const pct = state.tasks.length ? Math.round((doneCount / state.tasks.length) * 100) : 0;
+
+  const sortedPending = [...pending].sort((a, b) => a.due.localeCompare(b.due));
+  const nextDeadline = sortedPending[0];
+
+  const selDay = state.homeDay || todayDayIndex();
+  const dayClasses = classesForDay(selDay);
+
+  const feedPreview = sortedPosts().slice(0, 2);
+  const products = PRODUCTS.slice(0, 4);
+  const vendors = VENDORS.slice(0, 4);
+  const unread = state.notifications.filter(n => !n.read).length;
+
+  return `
+  <main class="page">
+    <div class="wrap">
+      <div class="topbar">
+        <div class="wordmark">RING</div>
+        <div class="topbar-actions">
+          <button class="icon-btn bell-wrap" data-act="nav" data-view="notifications" aria-label="Notifications">
+            ${icon('bell', 21)}
+            ${unread ? '<span class="bell-dot"></span>' : ''}
+          </button>
+          <button class="icon-btn" data-act="nav" data-view="profile" aria-label="Profile">
+            <span class="avatar">${esc(u.initials)}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="greet">
+        <h1>${greeting()}, ${esc(u.name.split(' ')[0])}.</h1>
+        <div class="sub">Bells University of Technology · ${esc(u.level)}</div>
+      </div>
+
+      <!-- TODAY'S OVERVIEW -->
+      <section class="section">
+        <div class="stat-row">
+          <button class="stat" data-act="go" data-view="academics" data-tab="timetable">
+            ${icon('clock', 20)}
+            <span class="stat-label">Next class</span>
+            <span class="stat-value">${nc ? esc(nc.cls.code) : '—'}</span>
+            <span class="stat-meta">${nc ? `${esc(nc.cls.start)} · ${esc(nc.cls.venue)}${nc.isToday ? '' : ' · ' + DAY_NAMES[nc.day]}` : 'No classes'}</span>
+          </button>
+          <button class="stat" data-act="go" data-view="academics" data-tab="tasks">
+            ${icon('checkCircle', 20)}
+            <span class="stat-label">Pending tasks</span>
+            <span class="stat-value">${pending.length}</span>
+            <span class="stat-meta">${doneCount} completed this week</span>
+          </button>
+          <button class="stat" data-act="go" data-view="academics" data-tab="tasks">
+            ${icon('calendar', 20)}
+            <span class="stat-label">Next deadline</span>
+            <span class="stat-value" style="font-size:14px;line-height:1.3">${nextDeadline ? esc(nextDeadline.course) : '—'}</span>
+            <span class="stat-meta">${nextDeadline ? 'Due ' + dateLabel(nextDeadline.due) : 'Nothing due'}</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- QUICK ACCESS -->
+      <section class="section" style="margin-bottom:8px">
+        <div class="section-head"><h2 class="h2">Quick access</h2></div>
+        <div class="quick-access-grid">
+          <button class="quick-access-item" data-act="go" data-view="academics" data-tab="timetable">
+            ${icon('calendar', 20)}<span>My timetable</span>
+          </button>
+          <button class="quick-access-item" data-act="go" data-view="academics" data-tab="tasks">
+            ${icon('checkCircle', 20)}<span>My tasks</span>
+          </button>
+          <button class="quick-access-item" data-act="go" data-view="academics" data-tab="resources">
+            ${icon('book', 20)}<span>Resources</span>
+          </button>
+          <button class="quick-access-item" data-act="nav" data-view="profile">
+            ${icon('bookmark', 20)}<span>Saved items</span>
+          </button>
+          <button class="quick-access-item" data-act="nav" data-view="explore">
+            ${icon('explore', 20)}<span>Marketplace</span>
+          </button>
+          ${state.homeFeaturesExpanded ? `
+            <button class="quick-access-item" data-act="nav" data-view="ai">
+              ${icon('ai', 20)}<span>Ring AI</span>
+            </button>
+            <button class="quick-access-item" data-act="nav" data-view="feed">
+              ${icon('feed', 20)}<span>Campus Feed</span>
+            </button>
+            <button class="quick-access-item" data-act="nav" data-view="map">
+              ${icon('pin', 20)}<span>Campus map</span>
+            </button>
+            <button class="quick-access-item" data-act="nav" data-view="news">
+              ${icon('news', 20)}<span>Campus news</span>
+            </button>
+            <button class="quick-access-item" data-act="nav" data-view="notifications">
+              ${icon('bell', 20)}<span>Notifications</span>
+            </button>
+            <button class="quick-access-item" data-act="nav" data-view="more">
+              ${icon('more', 20)}<span>More options</span>
+            </button>` : ''}
+          <button class="quick-access-item" data-act="home-features-toggle" aria-expanded="${state.homeFeaturesExpanded}">
+              ${icon('more', 20)}<span>${state.homeFeaturesExpanded ? 'Less' : 'More'}</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- MY ACADEMICS -->
+      <section class="section">
+        <div class="section-head">
+          <h2 class="h2">My Academics</h2>
+          <button class="link" data-act="go" data-view="academics" data-tab="timetable">View planner ${icon('chevronRight', 14)}</button>
+        </div>
+
+        <div class="panel">
+          <div class="day-strip">
+            ${[1,2,3,4,5].map(d => `
+              <button class="day-pill ${d === selDay ? 'on' : ''}" data-act="home-day" data-day="${d}">
+                <span>${DAY_NAMES[d]}</span>
+                <b>${new Date(new Date().setDate(new Date().getDate() - ((todayDayIndex() - d + 7) % 7))).getDate()}</b>
+              </button>`).join('')}
+          </div>
+
+          ${dayClasses.length ? dayClasses.map(c => `
+            <div class="class-row">
+              <div class="class-time">${esc(c.start)}</div>
+              <div class="class-accent" style="background:${c.code === 'GST 401' ? '#C9C9CE' : '#111'}"></div>
+              <div class="class-body">
+                <div class="class-code">${esc(c.code)} · ${esc(c.title)}</div>
+                <div class="class-meta">${esc(c.venue)} · ends ${esc(c.end)}</div>
+              </div>
+            </div>`).join('') : `
+            <div class="empty" style="padding:26px 10px">
+              ${icon('calendar', 26)}
+              <h3>No classes on ${DAY_FULL[selDay]}</h3>
+              <p>Use this time for tasks or resources.</p>
+            </div>`}
+        </div>
+
+        <div class="panel" style="margin-top:12px">
+          <div class="row-between" style="margin-bottom:10px">
+            <div class="h3">Upcoming tasks</div>
+            <span class="xs muted tnum">${doneCount}/${state.tasks.length} done</span>
+          </div>
+          <div class="progress" style="margin-bottom:12px"><i style="width:${pct}%"></i></div>
+          ${sortedPending.slice(0, 3).map(t => `
+            <div class="task-row">
+              <button class="check ${t.done ? 'on' : ''}" data-act="toggle-task" data-id="${t.id}" aria-label="Toggle task">${icon('check', 13)}</button>
+              <div class="grow">
+                <div class="task-title">${esc(t.title)}</div>
+                <div class="task-meta">
+                  <span>${esc(t.course)}</span>
+                  <span>·</span>
+                  <span>Due ${dateLabel(t.due)}</span>
+                  <span class="prio ${t.priority}">${t.priority}</span>
+                </div>
+              </div>
+            </div>`).join('')}
+          <div class="row" style="gap:8px;margin-top:14px">
+            <button class="btn sm outline grow" data-act="go" data-view="academics" data-tab="tasks">${icon('plus', 15)} Add task</button>
+            <button class="btn sm outline grow" data-act="go" data-view="academics" data-tab="timetable">${icon('plus', 15)} Add class</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEED PREVIEW -->
+      <section class="section">
+        <div class="section-head">
+          <h2 class="h2">Campus Feed</h2>
+          <button class="link" data-act="nav" data-view="feed">View all posts ${icon('chevronRight', 14)}</button>
+        </div>
+        <div class="panel" style="padding-top:2px;padding-bottom:2px">
+          ${feedPreview.map(p => `
+            <article class="post" data-id="${p.id}" style="cursor:pointer" data-act="nav" data-view="feed">
+              <div class="post-top">
+                <span class="avatar sm">${esc(p.initials)}</span>
+                <div class="post-id">
+                  <div class="post-nick">@${esc(p.nick)}</div>
+                  <div class="post-meta">${timeAgo(p.createdAt)} · <span class="cat-tag">${esc(p.cat)}</span></div>
+                </div>
+              </div>
+              <p class="post-text" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${esc(p.text)}</p>
+              <div class="post-actions">
+                <span class="pa">${icon('heart', 17)} ${p.likes}</span>
+                <span class="pa">${icon('comment', 17)} ${commentCount(p)}</span>
+              </div>
+            </article>`).join('')}
+        </div>
+      </section>
+
+      <!-- EXPLORE PREVIEW -->
+      <section class="section">
+        <div class="section-head">
+          <h2 class="h2">Explore Bells</h2>
+          <button class="link" data-act="nav" data-view="explore">Explore marketplace ${icon('chevronRight', 14)}</button>
+        </div>
+
+        <div class="vendor-row" style="margin-bottom:18px">
+          ${vendors.map(v => `
+            <button class="vendor" data-act="open-store" data-id="${v.id}">
+              <div class="ph">${imgTag(v.img, v.name)}<span class="ph-fb">${esc(v.name[0])}</span></div>
+              <div class="vendor-name">${esc(v.name)}</div>
+              <div class="vendor-meta">${icon('pin', 12)} ${esc(v.cat)}</div>
+            </button>`).join('')}
+        </div>
+
+        <div class="grid-products">
+          ${products.map(p => productCard(p)).join('')}
+        </div>
+      </section>
+
+    </div>
+  </main>`;
+}
+
+/* ============================================================
+   VIEW — FEED
+   ============================================================ */
+function commentCount(p){
+  return p.comments.reduce((n, c) => n + 1 + (c.replies ? c.replies.length : 0), 0);
+}
+function postEngagement(p){
+  return p.likes + commentCount(p);
+}
+function expiryDaysLeft(p){
+  const days = postEngagement(p) >= 6 ? 14 : 7;
+  const expiresAt = p.createdAt + days * D;
+  const left = Math.ceil((expiresAt - Date.now()) / D);
+  return Math.max(0, left);
+}
+function sortedPosts(){
+  let list = [...state.posts];
+  if (state.feedFilter !== 'all'){
+    list = list.filter(p => p.cat === state.feedFilter);
+  }
+  const sort = state.feedSort;
+  if (sort === 'latest'){
+    list.sort((a, b) => b.createdAt - a.createdAt);
+  } else if (sort === 'trending'){
+    list.sort((a, b) => (postEngagement(b) * 1.0 + (b.createdAt - a.createdAt) / D) - (postEngagement(a) * 1.0 + (a.createdAt - b.createdAt) / D));
+    list.sort((a, b) => postEngagement(b) - postEngagement(a));
+  } else {
+    list.sort((a, b) => (b.createdAt + postEngagement(b) * 12 * 60000) - (a.createdAt + postEngagement(a) * 12 * 60000));
+  }
+  return list;
+}
+function viewFeed(){
+  const posts = sortedPosts();
+  const filters = ['all', 'Campus Gist', 'Questions', 'Announcements', 'Discussions'];
+  return `
+  <main class="page">
+    <div class="wrap">
+      <div class="topbar">
+        <div>
+          <h1 class="h1" style="font-size:22px">Campus Feed</h1>
+          <p class="sub" style="margin-top:2px">What's happening around Bells?</p>
+        </div>
+        <button class="icon-btn" data-act="nav" data-view="notifications" aria-label="Notifications">${icon('bell', 21)}</button>
+      </div>
+
+      <div style="margin-top:14px">
+        <div class="tabs" style="gap:18px">
+          <button class="tab ${state.feedSort === 'foryou' ? 'on' : ''}" data-act="feed-sort" data-sort="foryou">For You</button>
+          <button class="tab ${state.feedSort === 'latest' ? 'on' : ''}" data-act="feed-sort" data-sort="latest">Latest</button>
+          <button class="tab ${state.feedSort === 'trending' ? 'on' : ''}" data-act="feed-sort" data-sort="trending">Trending</button>
+        </div>
+        <div class="chips" style="margin-bottom:6px">
+          ${filters.map(f => `
+            <button class="chip ${state.feedFilter === f ? 'on' : ''}" data-act="feed-filter" data-filter="${f}">
+              ${f === 'all' ? 'All' : esc(f)}
+            </button>`).join('')}
+        </div>
+      </div>
+
+      <section style="margin-top:6px">
+        ${posts.length ? posts.map(p => postCard(p)).join('') : `
+          <div class="empty">
+            ${icon('feed', 30)}
+            <h3>Nothing here yet</h3>
+            <p>No posts match this filter. Try another category or start the conversation.</p>
+          </div>`}
+      </section>
+      <div style="height:20px"></div>
+    </div>
+  </main>`;
+}
+function postCard(p){
+  const left = expiryDaysLeft(p);
+  return `
+  <article class="post" data-id="${p.id}">
+    <div class="post-top">
+      <span class="avatar sm">${esc(p.initials)}</span>
+      <div class="post-id">
+        <div class="post-nick">@${esc(p.nick)}</div>
+        <div class="post-meta">${timeAgo(p.createdAt)} · <span class="cat-tag">${esc(p.cat)}</span></div>
+      </div>
+      <button class="icon-btn" data-act="post-menu" data-id="${p.id}" aria-label="Post menu">${icon('dots', 18)}</button>
+    </div>
+    <p class="post-text">${esc(p.text)}</p>
+    <div class="post-actions">
+      <button class="pa ${p.liked ? 'on' : ''}" data-act="like-post" data-id="${p.id}">
+        ${icon('heart', 18)}<span class="tnum">${p.likes}</span>
+      </button>
+      <button class="pa" data-act="open-comments" data-id="${p.id}">
+        ${icon('comment', 18)}<span class="tnum">${commentCount(p)}</span>
+      </button>
+      <span class="post-expiry">${left} ${left === 1 ? 'day' : 'days'} left</span>
+    </div>
+  </article>`;
+}
+
+/* ---------- composer ---------- */
+function openComposer(){
+  openModal(`
+    <div class="sheet-head">
+      <div class="sheet-title">New post</div>
+      <button class="icon-btn" data-act="close-modal" aria-label="Close">${icon('x', 20)}</button>
+    </div>
+    <form data-form="create-post">
+      <div class="row" style="gap:10px;margin-bottom:14px">
+        <span class="avatar sm">${esc(state.user.initials)}</span>
+        <div>
+          <div class="fw600 sm">@${esc(state.user.nick)}</div>
+          <div class="xs muted">Posting to Campus Feed · 7 day lifespan</div>
+        </div>
+      </div>
+      <textarea class="textarea" id="composer-text" name="text" maxlength="280" rows="5"
+        placeholder="What's happening around Bells?" style="min-height:120px"></textarea>
+      <div class="row-between" style="margin-top:10px">
+        <select class="select" name="cat" style="width:auto;height:38px;font-size:13px;padding:0 36px 0 12px">
+          <option>Campus Gist</option>
+          <option>Questions</option>
+          <option>Discussions</option>
+          <option>Announcements</option>
+        </select>
+        <span class="xs muted tnum" id="composer-count">0/280</span>
+      </div>
+      <div class="row" style="gap:10px;margin-top:18px">
+        <button type="button" class="btn ghost grow" data-act="close-modal">Cancel</button>
+        <button type="submit" class="btn primary grow">Post</button>
+      </div>
+    </form>
+  `);
+}
+function publishPost(text, cat){
+  const user = state.user;
+  const post = {
+    id: 'p' + Date.now(),
+    nick: user.nick,
+    initials: user.initials,
+    cat: cat || 'Campus Gist',
+    text: text,
+    createdAt: Date.now(),
+    likes: 0,
+    liked: false,
+    comments: []
+  };
+  state.posts.unshift(post);
+  save();
+}
+
+/* ---------- comments sheet ---------- */
+function openComments(postId){
+  const p = state.posts.find(x => x.id === postId);
+  if (!p) return;
+  const rows = p.comments.map(c => commentRow(p.id, c)).join('');
+  openModal(`
+    <div class="sheet-head">
+      <div class="sheet-title">Comments · ${commentCount(p)}</div>
+      <button class="icon-btn" data-act="close-modal" aria-label="Close">${icon('x', 20)}</button>
+    </div>
+    <div style="max-height:46dvh;overflow-y:auto;margin-bottom:12px">
+      ${rows || `<div class="empty" style="padding:30px 10px">${icon('comment', 26)}<h3>No comments yet</h3><p>Be the first to reply.</p></div>`}
+    </div>
+    <form data-form="add-comment" data-post="${p.id}" class="row" style="gap:8px;border-top:1px solid var(--line);padding-top:12px">
+      <input class="input" name="text" placeholder="Write a comment…" autocomplete="off" required />
+      <button class="btn primary" type="submit" style="padding:0 16px">${icon('send', 18)}</button>
+    </form>
+  `);
+}
+function commentRow(postId, c){
+  return `
+  <div class="comment">
+    <span class="avatar sm">${esc(c.initials)}</span>
+    <div class="comment-body">
+      <div class="row" style="gap:6px">
+        <span class="post-nick">@${esc(c.nick)}</span>
+        <span class="xs muted">· ${timeAgo(c.createdAt)}</span>
+      </div>
+      <div class="comment-text">${esc(c.text)}</div>
+      <div class="comment-actions">
+        <button class="${c.liked ? 'on' : ''}" data-act="like-comment" data-post="${postId}" data-id="${c.id}">
+          ${icon('heart', 14)} ${c.likes}
+        </button>
+        <button data-act="reply-comment" data-post="${postId}" data-id="${c.id}">Reply</button>
+      </div>
+      ${c.replies && c.replies.length ? `<div class="reply">
+        ${c.replies.map(r => `
+          <div style="padding:8px 0">
+            <div class="row" style="gap:6px">
+              <span class="post-nick" style="font-size:12.5px">@${esc(r.nick)}</span>
+              <span class="xs muted">· ${timeAgo(r.createdAt)}</span>
+            </div>
+            <div class="comment-text" style="font-size:13px">${esc(r.text)}</div>
+          </div>`).join('')}
+      </div>` : ''}
+    </div>
+  </div>`;
+}
+
+/* ============================================================
+   VIEW — EXPLORE
+   ============================================================ */
+function imgTag(id, alt){
+  if (!id) return '';
+  return `<img src="https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=600&q=70" alt="${esc(alt)}" loading="lazy"
+    onerror="this.parentNode.classList.add('fail')">`;
+}
+function productCard(p){
+  const v = VENDORS.find(x => x.id === p.vendor);
+  const saved = state.savedProducts.includes(p.id);
+  return `
+  <div class="product">
+    <button class="ph" data-act="open-product" data-id="${p.id}" aria-label="${esc(p.name)}">
+      ${imgTag(p.img, p.name)}
+      <span class="ph-fb">${esc(p.name[0])}</span>
+    </button>
+    <button class="fav ${saved ? 'on' : ''}" data-act="fav-product" data-id="${p.id}" aria-label="Save product">${icon('heart', 16)}</button>
+    <button data-act="open-product" data-id="${p.id}" style="text-align:left">
+      <div class="product-name">${esc(p.name)}</div>
+      <div class="product-vendor">${esc(v ? v.name : '')}</div>
+      <div class="product-price">${naira(p.price)}</div>
+    </button>
+  </div>`;
+}
+const CATEGORIES = ['All','Food','Fashion','Sneakers','Beauty','Gadgets','Accessories','Services'];
+
+function viewExplore(){
+  const q = (state.search || '').toLowerCase().trim();
+  const cat = state.exploreCat || 'All';
+  let list = PRODUCTS.filter(p => {
+    const v = VENDORS.find(x => x.id === p.vendor);
+    const matchCat = cat === 'All' || p.cat === cat;
+    const matchQ = !q || p.name.toLowerCase().includes(q) || (v && v.name.toLowerCase().includes(q)) || p.cat.toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+  const cartCount = state.cart.reduce((n, i) => n + i.qty, 0);
+
+  return `
+  <main class="page">
+    <div class="wrap wide">
+      <div class="topbar">
+        <div>
+          <h1 class="h1" style="font-size:22px">Explore</h1>
+          <p class="sub" style="margin-top:2px">Shops, stores and services around campus.</p>
+        </div>
+        <button class="icon-btn" data-act="nav" data-view="cart" aria-label="Cart" style="position:relative">
+          ${icon('bag', 21)}
+          ${cartCount ? `<span style="position:absolute;top:2px;right:2px;background:#111;color:#fff;font-size:9.5px;font-weight:700;min-width:16px;height:16px;border-radius:999px;display:flex;align-items:center;justify-content:center;padding:0 4px">${cartCount}</span>` : ''}
+        </button>
+      </div>
+
+      <div class="search-box" style="margin-top:12px">
+        ${icon('search', 18)}
+        <input class="input" id="explore-search" placeholder="Search products, stores and services" value="${esc(state.search || '')}" />
+      </div>
+
+      <div class="chips" style="margin-top:14px">
+        ${CATEGORIES.map(c => `<button class="chip ${cat === c ? 'on' : ''}" data-act="explore-cat" data-cat="${c}">${c}</button>`).join('')}
+      </div>
+
+      ${!q ? `
+      <section class="section">
+        <div class="section-head"><h2 class="h2">Featured stores</h2></div>
+        <div class="vendor-row">
+          ${VENDORS.map(v => `
+            <button class="vendor" data-act="open-store" data-id="${v.id}">
+              <div class="ph">${imgTag(v.img, v.name)}<span class="ph-fb">${esc(v.name[0])}</span></div>
+              <div class="vendor-name">${esc(v.name)}</div>
+              <div class="vendor-meta">${icon('pin', 12)} ${esc(v.loc)}</div>
+            </button>`).join('')}
+        </div>
+      </section>` : ''}
+
+      <section class="section">
+        <div class="section-head">
+          <h2 class="h2">${q ? 'Search results' : (cat === 'All' ? 'New arrivals' : cat)}</h2>
+          <span class="xs muted tnum">${list.length} ${list.length === 1 ? 'item' : 'items'}</span>
+        </div>
+        ${list.length ? `<div class="grid-products">${list.map(p => productCard(p)).join('')}</div>` : `
+          <div class="empty">
+            ${icon('search', 30)}
+            <h3>No products found</h3>
+            <p>Try a different search term or category.</p>
+          </div>`}
+      </section>
+      <div style="height:20px"></div>
+    </div>
+  </main>`;
+}
+
+/* ---------- store ---------- */
+function viewStore(){
+  const v = VENDORS.find(x => x.id === state.params.id) || VENDORS[0];
+  const items = PRODUCTS.filter(p => p.vendor === v.id);
+  return `
+  <main class="page">
+    <div class="wrap">
+      <div class="topbar" style="padding-bottom:0">
+        <button class="icon-btn" data-act="nav" data-view="explore" aria-label="Back">${icon('chevronLeft', 21)}</button>
+        <div class="wordmark" style="font-size:14px">RING</div>
+        <button class="icon-btn" data-act="nav" data-view="cart" aria-label="Cart">${icon('bag', 21)}</button>
+      </div>
+
+      <div class="ph" style="aspect-ratio:16/9;border-radius:var(--radius);margin-top:10px">
+        ${imgTag(v.img, v.name)}<span class="ph-fb">${esc(v.name[0])}</span>
+      </div>
+
+      <div style="margin-top:16px">
+        <h1 class="h1" style="font-size:22px">${esc(v.name)}</h1>
+        <div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap">
+          <span class="badge">${esc(v.cat)}</span>
+          <span class="badge">${icon('pin', 12)} ${esc(v.loc)}</span>
+        </div>
+        <p class="sub" style="margin-top:12px;line-height:1.6">${esc(v.desc)}</p>
+        <button class="btn primary block" style="margin-top:16px" data-act="vendor-whatsapp" data-id="${v.id}">
+          ${icon('phone', 18)} Contact store on WhatsApp
+        </button>
+      </div>
+
+      <section class="section">
+        <div class="section-head"><h2 class="h2">Products</h2><span class="xs muted tnum">${items.length} items</span></div>
+        <div class="grid-products">${items.map(p => productCard(p)).join('')}</div>
+      </section>
+      <div style="height:24px"></div>
+    </div>
+  </main>`;
+}
+
+/* ---------- product ---------- */
+function viewProduct(){
+  const p = PRODUCTS.find(x => x.id === state.params.id) || PRODUCTS[0];
+  const v = VENDORS.find(x => x.id === p.vendor);
+  const saved = state.savedProducts.includes(p.id);
+  return `
+  <main class="page">
+    <div class="wrap">
+      <div class="topbar" style="padding-bottom:0">
+        <button class="icon-btn" data-act="nav" data-view="explore" aria-label="Back">${icon('chevronLeft', 21)}</button>
+        <div class="wordmark" style="font-size:14px">RING</div>
+        <button class="icon-btn" data-act="nav" data-view="cart" aria-label="Cart">${icon('bag', 21)}</button>
+      </div>
+
+      <div class="ph" style="aspect-ratio:1/1;border-radius:var(--radius);margin-top:10px">
+        ${imgTag(p.img, p.name)}<span class="ph-fb" style="font-size:44px">${esc(p.name[0])}</span>
+      </div>
+
+      <div style="margin-top:18px">
+        <div class="row-between" style="align-items:flex-start">
+          <div class="grow">
+            <h1 class="h1" style="font-size:22px;line-height:1.3">${esc(p.name)}</h1>
+            <button class="sub" style="margin-top:4px;text-decoration:underline;text-underline-offset:2px" data-act="open-store" data-id="${v.id}">${esc(v.name)}</button>
+          </div>
+          <button class="icon-btn" data-act="fav-product" data-id="${p.id}" aria-label="Save" style="border:1px solid var(--line)">
+            ${icon('heart', 19, saved ? 'fav-on' : '')}
+          </button>
+        </div>
+        <div class="h1" style="font-size:24px;margin-top:14px">${naira(p.price)}</div>
+        <div class="row" style="gap:8px;margin-top:10px">
+          <span class="badge">${esc(p.stock)}</span>
+          <span class="badge">${esc(p.cat)}</span>
+        </div>
+        <p class="sub" style="margin-top:16px;line-height:1.65">${esc(p.desc)}</p>
+      </div>
+
+      <div class="panel flat" style="margin-top:20px;display:flex;gap:12px;align-items:flex-start">
+        ${icon('pin', 20)}
+        <div>
+          <div class="h3">Pickup on campus</div>
+          <p class="xs muted" style="margin-top:2px">${esc(v.loc)} · arrange pickup with the vendor on WhatsApp.</p>
+        </div>
+      </div>
+
+      <div class="row" style="gap:10px;margin-top:22px;margin-bottom:28px">
+        <button class="btn outline" style="flex:0 0 auto;padding:0 18px" data-act="add-cart" data-id="${p.id}">Add to cart</button>
+        <button class="btn primary grow" data-act="add-cart-checkout" data-id="${p.id}">Buy on WhatsApp</button>
+      </div>
+    </div>
+  </main>`;
+}
+
+/* ---------- cart ---------- */
+function viewCart(){
+  const lines = state.cart.map(item => {
+    const p = PRODUCTS.find(x => x.id === item.id);
+    return p ? { p, qty: item.qty } : null;
+  }).filter(Boolean);
+  const total = lines.reduce((s, l) => s + l.p.price * l.qty, 0);
+
+  return `
+  <main class="page">
+    <div class="wrap">
+      <div class="topbar" style="padding-bottom:0">
+        <button class="icon-btn" data-act="nav" data-view="explore" aria-label="Back">${icon('chevronLeft', 21)}</button>
+        <div class="h2">Cart</div>
+        <div style="width:38px"></div>
+      </div>
+
+      ${lines.length ? `
+        <div style="margin-top:12px">
+          ${lines.map(l => `
+            <div class="card-line">
+              <div class="ph" style="width:64px;height:64px;flex:0 0 auto;border-radius:10px">
+                ${imgTag(l.p.img, l.p.name)}<span class="ph-fb">${esc(l.p.name[0])}</span>
+              </div>
+              <div class="grow">
+                <div class="product-name" style="margin-top:0">${esc(l.p.name)}</div>
+                <div class="product-price" style="margin-top:3px">${naira(l.p.price)}</div>
+              </div>
+              <div class="qty-ctrl">
+                <button data-act="cart-dec" data-id="${l.p.id}" aria-label="Decrease">−</button>
+                <span>${l.qty}</span>
+                <button data-act="cart-inc" data-id="${l.p.id}" aria-label="Increase">+</button>
+              </div>
+            </div>`).join('')}
+        </div>
+
+        <div class="hr" style="margin-top:18px"></div>
+        <div class="totals">
+          <span class="sub">Subtotal</span>
+          <b>${naira(total)}</b>
+        </div>
+        <p class="xs muted" style="margin-bottom:16px">Checkout is completed with the vendor on WhatsApp. Delivery and pickup are arranged directly.</p>
+        <button class="btn primary block" data-act="checkout">${icon('phone', 18)} Checkout on WhatsApp</button>
+        <button class="btn ghost block" style="margin-top:10px" data-act="clear-cart">Clear cart</button>
+      ` : `
+        <div class="empty" style="padding-top:70px">
+          ${icon('bag', 34)}
+          <h3>Your cart is empty</h3>
+          <p>Browse the marketplace and add something you like.</p>
+          <button class="btn primary" style="margin-top:18px" data-act="nav" data-view="explore">Explore marketplace</button>
+        </div>`}
+      <div style="height:24px"></div>
+    </div>
+  </main>`;
+}
+
+/* ============================================================
+   VIEW — AI
+   ============================================================ */
+const AI_REPLIES = [
+  { k:['timetable','class','schedule','lecture'], r:'Your next class is CSC 401 — Compiler Design at 10:00 AM in LT 2. You have two classes today. Open My Timetable from Home for the full week.' },
+  { k:['task','assignment','deadline','due'], r:'You have three pending tasks. The closest deadline is the Database assignment for CSC 405, due in two days. I can open My Tasks if you want to review them.' },
+  { k:['food','eat','lunch','hungry','jollof'], r:'Auntie Bose Kitchen behind the Female Hostel is the closest option from the College of Computing — Jollof Rice & Grilled Chicken is ₦2,500 and it is usually ready in ten minutes.' },
+  { k:['print','printing','document','bind'], r:'Bells Print & Design at the ICT Centre handles printing and binding — ₦1,500 for 50 pages, same-day turnaround on most jobs.' },
+  { k:['wifi','internet','network','connection'], r:'Campus Wi-Fi issues are usually handled by the ICT Centre. A switch on the science axis is being replaced this week, so expect intermittent connectivity.' },
+  { k:['library','book','resource','past question'], r:'The Library opens 8:00 AM to 10:00 PM on weekdays. CSC 405 past questions and CSC 401 lecture notes are already available under Resources.' },
+  { k:['wallet','lost','found'], r:'A black wallet found in the library was handed to the front desk attendant. You can also post on Campus Feed to reach more students.' },
+  { k:['shuttle','transport','bus'], r:'The shuttle now runs an additional morning route between the main gate and the hostels, every twenty minutes from 6:40 AM to 8:00 AM.' }
+];
+function viewAI(){
+  const msgs = state.aiMessages;
+  return `
+  <main class="page ai-page">
+    <div class="wrap">
+      <div class="topbar">
+        <div>
+          <h1 class="h1" style="font-size:22px">Ring AI</h1>
+          <p class="sub" style="margin-top:2px">Your campus assistant.</p>
+        </div>
+        ${msgs.length ? `<button class="btn sm ghost" data-act="ai-clear">Clear</button>` : ''}
+      </div>
+
+      <div class="ai-banner">
+        ${icon('shield', 18)}
+        <p><strong>Demo preview.</strong> Ring AI is not yet live. This interface demonstrates how it will answer questions about your timetable, tasks, the marketplace and campus life.</p>
+      </div>
+
+      <div class="chat" id="ai-chat">
+        ${msgs.length ? msgs.map(m => `
+          <div class="msg ${m.role === 'me' ? 'me' : ''}">
+            ${m.role === 'ai' ? `<span class="avatar sm ghost">${icon('ai', 15)}</span>` : ''}
+            <div class="msg-bubble">${esc(m.text)}</div>
+          </div>`).join('') : `
+          <div class="msg">
+            <span class="avatar sm ghost">${icon('ai', 15)}</span>
+            <div class="msg-bubble">Good day. I can help with your timetable, tasks, campus locations, resources and the marketplace. What do you need?</div>
+          </div>`}
+      </div>
+
+      ${!msgs.length ? `
+        <div style="margin-bottom:18px">
+          <div class="eyebrow" style="margin-bottom:10px">Suggested</div>
+          <div class="chips" style="flex-wrap:wrap;overflow:visible">
+            ${['What is my next class?','What is due this week?','Where can I get lunch?','Printing at the ICT Centre'].map(s => `
+              <button class="chip" data-act="ai-suggest" data-text="${esc(s)}">${esc(s)}</button>`).join('')}
+          </div>
+        </div>` : ''}
+
+      <form class="chat-input-bar" data-form="ai-send">
+        <input class="input" name="text" id="ai-input" placeholder="Ask Ring AI…" autocomplete="off" value="${esc(state.aiDraft || '')}" />
+        <button class="btn primary" type="submit" style="padding:0 16px" aria-label="Send">${icon('send', 18)}</button>
+      </form>
+    </div>
+  </main>`;
+}
+function aiRespond(text){
+  const t = text.toLowerCase();
+  const hit = AI_REPLIES.find(r => r.k.some(k => t.includes(k)));
+  if (hit) return hit.r;
+  return "That's a great question. This is a demo preview of Ring AI, so I can't answer it fully yet — in the finished product I'll be connected to your timetable, tasks, resources and the campus marketplace to answer that properly.";
+}
+
+/* ============================================================
+   VIEW — MORE
+   ============================================================ */
+function viewMore(){
+  const u = state.user;
+  const unread = state.notifications.filter(n => !n.read).length;
+  return `
+  <main class="page">
+    <div class="wrap">
+      <div class="topbar">
+        <h1 class="h1" style="font-size:22px">More</h1>
+        <div style="width:38px"></div>
+      </div>
+
+      <button class="panel" style="display:flex;align-items:center;gap:14px;width:100%;text-align:left;margin-top:10px" data-act="nav" data-view="profile">
+        <span class="avatar lg">${esc(u.initials)}</span>
+        <div class="grow">
+          <div class="row" style="gap:6px">
+            <span class="h3">@${esc(u.nick)}</span>
+            ${u.verified ? `<span class="badge verified">${icon('check', 10)} Verified</span>` : ''}
+          </div>
+          <div class="sub" style="margin-top:2px">${esc(u.name)}</div>
+          <div class="xs muted" style="margin-top:2px">${esc(u.dept)} · ${esc(u.level)}</div>
+        </div>
+        <span class="chev muted-2">${icon('chevronRight', 18)}</span>
+      </button>
+
+      <section class="section">
+        <div class="eyebrow" style="margin-bottom:10px">Campus</div>
+        <div class="list">
+          <button class="list-row" data-act="nav" data-view="news">
+            ${icon('news', 20)}
+            <div class="grow"><div class="list-label">News</div><div class="list-sub">Verified campus announcements</div></div>
+            <span class="chev">${icon('chevronRight', 18)}</span>
+          </button>
+          <button class="list-row" data-act="nav" data-view="map">
+            ${icon('pin', 20)}
+            <div class="grow"><div class="list-label">Map</div><div class="list-sub">Campus locations and directions</div></div>
+            <span class="chev">${icon('chevronRight', 18)}</span>
+          </button>
+          <button class="list-row" data-act="nav" data-view="notifications">
+            ${icon('bell', 20)}
+            <div class="grow"><div class="list-label">Notifications</div><div class="list-sub">${unread ? unread + ' unread' : 'All caught up'}</div></div>
+            ${unread ? `<span class="pill-count">${unread}</span>` : ''}
+            <span class="chev">${icon('chevronRight', 18)}</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="eyebrow" style="margin-bottom:10px">Account</div>
+        <div class="list">
+          <button class="list-row" data-act="nav" data-view="profile">
+            ${icon('user', 20)}
+            <div class="grow"><div class="list-label">Profile</div><div class="list-sub">Nickname, academics and saved items</div></div>
+            <span class="chev">${icon('chevronRight', 18)}</span>
+          </button>
+          <button class="list-row" data-act="nav" data-view="settings">
+            ${icon('settings', 20)}
+            <div class="grow"><div class="list-label">Settings</div><div class="list-sub">Preferences and account controls</div></div>
+            <span class="chev">${icon('chevronRight', 18)}</span>
+          </button>
+          <button class="list-row" data-act="nav" data-view="academics" data-tab="timetable">
+            ${icon('book', 20)}
+            <div class="grow"><div class="list-label">Academic workspace</div><div class="list-sub">Timetable, tasks and resources</div></div>
+            <span class="chev">${icon('chevronRight', 18)}</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="list">
+          <button class="list-row" data-act="signout">
+            ${icon('logout', 20)}
+            <div class="grow"><div class="list-label" style="color:#B4242A">Sign out</div></div>
+          </button>
+        </div>
+      </section>
+
+      <p class="xs muted" style="text-align:center;margin:26px 0 10px">RING · Prototype build · Bells University of Technology</p>
+    </div>
+  </main>`;
+}
+
+/* ============================================================
+   VIEW — NEWS
+   ============================================================ */
+function viewNews(){
+  return `
+  <main class="page">
+    <div class="wrap">
+      <div class="topbar" style="padding-bottom:0">
+        <button class="icon-btn" data-act="nav" data-view="more" aria-label="Back">${icon('chevronLeft', 21)}</button>
+        <div class="h2">News</div>
+        <div style="width:38px"></div>
+      </div>
+      <p class="sub" style="margin-top:8px">Curated and verified campus announcements.</p>
+
+      <section style="margin-top:16px">
+        ${state.news.map(n => `
+          <article class="post" style="padding:16px 0">
+            <div class="row" style="gap:8px;margin-bottom:8px">
+              <span class="cat-tag">${esc(n.tag)}</span>
+              <span class="xs muted">${timeAgo(n.time)} · ${esc(n.source)}</span>
+            </div>
+            <h3 class="h3" style="font-size:15px;line-height:1.4">${esc(n.title)}</h3>
+            <p class="sub" style="margin-top:6px;line-height:1.6">${esc(n.body)}</p>
+          </article>`).join('')}
+      </section>
+      <div style="height:24px"></div>
+    </div>
+  </main>`;
+}
+
+/* ============================================================
+   VIEW — MAP
+   ============================================================ */
+function viewMap(){
+  const selId = state.params.loc || null;
+  const sel = MAP_LOCATIONS.find(l => l.id === selId);
+  return `
+  <main class="page">
+    <div class="wrap">
+      <div class="topbar" style="padding-bottom:0">
+        <button class="icon-btn" data-act="nav" data-view="more" aria-label="Back">${icon('chevronLeft', 21)}</button>
+        <div class="h2">Campus Map</div>
+        <div style="width:38px"></div>
+      </div>
+      <p class="sub" style="margin-top:8px">Bells University of Technology, Ota.</p>
+
+      <div class="map-card" style="margin-top:14px">
+        <svg class="campus-map" viewBox="0 0 400 300" role="img" aria-label="Campus map">
+          <rect width="400" height="300" fill="#F6F6F7"/>
+          <!-- greens -->
+          <rect x="130" y="130" width="60" height="46" rx="8" fill="#EDEDEF"/>
+          <rect x="300" y="30" width="72" height="56" rx="8" fill="#EDEDEF"/>
+          <!-- roads -->
+          <path d="M0 118 H400" stroke="#E3E3E7" stroke-width="14"/>
+          <path d="M152 0 V300" stroke="#E3E3E7" stroke-width="14"/>
+          <path d="M0 214 H400" stroke="#E3E3E7" stroke-width="12"/>
+          <path d="M276 0 V300" stroke="#E3E3E7" stroke-width="10"/>
+          <!-- buildings -->
+          <g fill="#FFFFFF" stroke="#DDDDE1" stroke-width="1.2">
+            <rect x="60" y="40" width="86" height="56" rx="6"/>
+            <rect x="196" y="36" width="70" height="60" rx="6"/>
+            <rect x="34" y="140" width="64" height="52" rx="6"/>
+            <rect x="272" y="128" width="72" height="56" rx="6"/>
+            <rect x="172" y="170" width="58" height="44" rx="6"/>
+            <rect x="296" y="226" width="72" height="52" rx="6"/>
+            <rect x="58" y="212" width="72" height="52" rx="6"/>
+            <rect x="16" y="232" width="30" height="24" rx="5"/>
+          </g>
+          <g fill="#8A8A90" font-size="7.5" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">
+            <text x="103" y="102">Library</text>
+            <text x="231" y="102">Computing</text>
+            <text x="66" y="200">Cafeteria</text>
+            <text x="308" y="192">Senate</text>
+            <text x="201" y="222">ICT</text>
+            <text x="332" y="286">Hostel</text>
+            <text x="94" y="272">Sports</text>
+          </g>
+          ${MAP_LOCATIONS.map(l => `
+            <g class="mpin ${selId === l.id ? 'on' : ''}" data-act="map-pin" data-id="${l.id}">
+              <circle class="halo" cx="${l.x}" cy="${l.y}" r="14" fill="rgba(17,17,17,0.06)"/>
+              <circle class="dot" cx="${l.x}" cy="${l.y}" r="6" fill="#FFFFFF" stroke="#111" stroke-width="2"/>
+              <circle cx="${l.x}" cy="${l.y}" r="2" fill="#111"/>
+              <title>${esc(l.name)}</title>
+            </g>`).join('')}
+        </svg>
+      </div>
+
+      ${sel ? `
+        <div class="panel" style="margin-top:14px">
+          <div class="row" style="gap:10px">
+            ${icon('pin', 20)}
+            <div class="grow">
+              <div class="h3">${esc(sel.name)}</div>
+              <p class="sub" style="margin-top:4px;line-height:1.55">${esc(sel.desc)}</p>
+            </div>
+          </div>
+        </div>` : `
+        <div class="panel flat" style="margin-top:14px">
+          <p class="sub">Tap a pin on the map to see details about a campus location.</p>
+        </div>`}
+
+      <section class="section">
+        <div class="section-head"><h2 class="h2">Locations</h2></div>
+        <div class="list">
+          ${MAP_LOCATIONS.map(l => `
+            <button class="list-row" data-act="map-pin" data-id="${l.id}">
+              ${icon('pin', 19)}
+              <div class="grow"><div class="list-label">${esc(l.name)}</div><div class="list-sub">${esc(l.desc.slice(0, 54))}…</div></div>
+              <span class="chev">${icon('chevronRight', 17)}</span>
+            </button>`).join('')}
+        </div>
+      </section>
+      <div style="height:24px"></div>
+    </div>
+  </main>`;
+}
+
+/* ============================================================
+   VIEW — PROFILE
+   ============================================================ */
+function viewProfile(){
+  const u = state.user;
+  const myPosts = state.posts.filter(p => p.nick === u.nick);
+  const saved = PRODUCTS.filter(p => state.savedProducts.includes(p.id));
+  const savedRes = state.resources.filter(r => state.savedResources.includes(r.id));
+  return `
+  <main class="page">
+    <div class="wrap">
+      <div class="topbar" style="padding-bottom:0">
+        <button class="icon-btn" data-act="nav" data-view="more" aria-label="Back">${icon('chevronLeft', 21)}</button>
+        <div class="h2">Profile</div>
+        <button class="icon-btn" data-act="nav" data-view="settings" aria-label="Settings">${icon('settings', 20)}</button>
+      </div>
+
+      <div style="text-align:center;padding:22px 0 18px">
+        <span class="avatar lg" style="margin:0 auto">${esc(u.initials)}</span>
+        <h1 class="h1" style="font-size:22px;margin-top:14px">@${esc(u.nick)}</h1>
+        <div class="sub" style="margin-top:4px">${esc(u.name)}</div>
+        <div class="row" style="justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap">
+          ${u.verified ? `<span class="badge verified">${icon('check', 10)} Verified student</span>` : `<span class="badge">Verification pending</span>`}
+          <span class="badge">${esc(u.level)}</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="card-line">
+          <div class="grow"><div class="xs muted">University</div><div class="h3" style="font-size:13.5px">${esc(u.uni)}</div></div>
+        </div>
+        <div class="card-line">
+          <div class="grow"><div class="xs muted">Department</div><div class="h3" style="font-size:13.5px">${esc(u.dept)}</div></div>
+        </div>
+        <div class="card-line">
+          <div class="grow"><div class="xs muted">Matriculation number</div><div class="h3" style="font-size:13.5px" class="mono">${esc(u.matric)}</div></div>
+        </div>
+        <div class="card-line" style="border-bottom:0">
+          <div class="grow"><div class="xs muted">Email</div><div class="h3" style="font-size:13.5px">${esc(u.email)}</div></div>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="section-head"><h2 class="h2">My posts</h2><span class="xs muted tnum">${myPosts.length}</span></div>
+        ${myPosts.length ? `<div class="panel" style="padding-top:2px;padding-bottom:2px">
+          ${myPosts.map(p => `
+            <article class="post" style="border-bottom:1px solid var(--line-2)">
+              <div class="post-meta"><span class="cat-tag">${esc(p.cat)}</span> · ${timeAgo(p.createdAt)}</div>
+              <p class="post-text" style="margin-top:8px">${esc(p.text)}</p>
+              <div class="post-actions">
+                <span class="pa">${icon('heart', 16)} ${p.likes}</span>
+                <span class="pa">${icon('comment', 16)} ${commentCount(p)}</span>
+              </div>
+            </article>`).join('')}
+        </div>` : `<div class="empty" style="padding:30px 10px">${icon('feed', 26)}<h3>No posts yet</h3><p>Your Campus Feed posts will appear here.</p></div>`}
+      </section>
+
+      <section class="section">
+        <div class="section-head"><h2 class="h2">Saved products</h2><span class="xs muted tnum">${saved.length}</span></div>
+        ${saved.length ? `<div class="grid-products">${saved.map(p => productCard(p)).join('')}</div>`
+          : `<div class="empty" style="padding:26px 10px">${icon('bookmark', 26)}<h3>Nothing saved</h3><p>Tap the heart on any product to save it here.</p></div>`}
+      </section>
+
+      <section class="section">
+        <div class="section-head"><h2 class="h2">Saved resources</h2><span class="xs muted tnum">${savedRes.length}</span></div>
+        ${savedRes.length ? `<div class="list">${savedRes.map(r => `
+          <div class="list-row">
+            ${icon('book', 19)}
+            <div class="grow"><div class="list-label">${esc(r.code)} · ${esc(r.title)}</div><div class="list-sub">${esc(r.type)} · ${esc(r.file)}</div></div>
+          </div>`).join('')}</div>`
+          : `<div class="empty" style="padding:26px 10px">${icon('book', 26)}<h3>No saved resources</h3><p>Save course material from the academic workspace.</p></div>`}
+      </section>
+
+      <section class="section">
+        <div class="list">
+          <button class="list-row" data-act="nav" data-view="settings">
+            ${icon('settings', 20)}
+            <div class="grow"><div class="list-label">Account settings</div></div>
+            <span class="chev">${icon('chevronRight', 18)}</span>
+          </button>
+          <button class="list-row" data-act="nav" data-view="notifications">
+            ${icon('bell', 20)}
+            <div class="grow"><div class="list-label">Notifications</div></div>
+            <span class="chev">${icon('chevronRight', 18)}</span>
+          </button>
+          <button class="list-row" data-act="signout">
+            ${icon('logout', 20)}
+            <div class="grow"><div class="list-label" style="color:#B4242A">Sign out</div></div>
+          </button>
+        </div>
+      </section>
+      <div style="height:24px"></div>
+    </div>
+  </main>`;
+}
+
+/* ============================================================
+   VIEW — SETTINGS
+   ============================================================ */
+function viewSettings(){
+  const p = state.prefs;
+  return `
+  <main class="page">
+    <div class="wrap">
+      <div class="topbar" style="padding-bottom:0">
+        <button class="icon-btn" data-act="nav" data-view="more" aria-label="Back">${icon('chevronLeft', 21)}</button>
+        <div class="h2">Settings</div>
+        <div style="width:38px"></div>
+      </div>
+
+      <section class="section">
+        <div class="eyebrow" style="margin-bottom:10px">Notifications</div>
+        <div class="list">
+          ${[['push','Push notifications','Likes, comments and class reminders'],
+             ['email','Email digest','A weekly summary of campus activity'],
+             ['digest','Community highlights','Occasional updates from the Feed']].map(([k, label, sub]) => `
+            <div class="list-row" style="cursor:default">
+              <div class="grow"><div class="list-label">${label}</div><div class="list-sub">${sub}</div></div>
+              <button class="check ${p[k] ? 'on' : ''}" data-act="toggle-pref" data-pref="${k}" aria-label="Toggle ${label}">${icon('check', 13)}</button>
+            </div>`).join('')}
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="eyebrow" style="margin-bottom:10px">Account</div>
+        <div class="list">
+          <button class="list-row" data-act="edit-profile">
+            ${icon('user', 20)}
+            <div class="grow"><div class="list-label">Edit profile</div><div class="list-sub">Nickname and academic details</div></div>
+            <span class="chev">${icon('chevronRight', 18)}</span>
+          </button>
+          <button class="list-row" data-act="kyc-restart">
+            ${icon('shield', 20)}
+            <div class="grow"><div class="list-label">Student verification</div><div class="list-sub">${state.user.verified ? 'Verified demo student' : 'Pending'}</div></div>
+            <span class="chev">${icon('chevronRight', 18)}</span>
+          </button>
+          <button class="list-row" data-act="reset-data">
+            ${icon('trash', 20)}
+            <div class="grow"><div class="list-label" style="color:#B4242A">Reset demo data</div><div class="list-sub">Restore the prototype to its original state</div></div>
+          </button>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="list">
+          <button class="list-row" data-act="signout">
+            ${icon('logout', 20)}
+            <div class="grow"><div class="list-label" style="color:#B4242A">Sign out</div></div>
+          </button>
+        </div>
+      </section>
+      <p class="xs muted" style="text-align:center;margin:26px 0 10px">RING · Prototype build 1.0</p>
+    </div>
+  </main>`;
+}
+
+/* ============================================================
+   VIEW — NOTIFICATIONS
+   ============================================================ */
+function viewNotifications(){
+  const unread = state.notifications.filter(n => !n.read).length;
+  const iconsFor = { like:'heart', comment:'comment', class:'clock', task:'checkCircle', resource:'book', verify:'shield' };
+  return `
+  <main class="page">
+    <div class="wrap">
+      <div class="topbar" style="padding-bottom:0">
+        <button class="icon-btn" data-act="nav" data-view="home" aria-label="Back">${icon('chevronLeft', 21)}</button>
+        <div class="h2">Notifications</div>
+        <button class="btn sm ghost" data-act="read-all" ${unread ? '' : 'disabled'}>Mark all read</button>
+      </div>
+
+      <section style="margin-top:14px">
+        ${state.notifications.length ? state.notifications.map(n => `
+          <button class="post" style="display:flex;gap:12px;width:100%;text-align:left;align-items:flex-start;padding:14px 0"
+            data-act="read-notif" data-id="${n.id}">
+            <span style="width:34px;height:34px;border-radius:50%;background:${n.read ? 'var(--bg-2)' : 'var(--ink)'};color:${n.read ? 'var(--ink-2)' : '#fff'};display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+              ${icon(iconsFor[n.type] || 'bell', 17)}
+            </span>
+            <div class="grow">
+              <div style="font-size:13.5px;line-height:1.5;color:${n.read ? 'var(--ink-2)' : 'var(--ink)'};font-weight:${n.read ? '400' : '550'}">${esc(n.text)}</div>
+              <div class="xs muted" style="margin-top:3px">${timeAgo(n.time)}</div>
+            </div>
+            ${n.read ? '' : '<span style="width:7px;height:7px;border-radius:50%;background:#111;margin-top:6px;flex:0 0 auto"></span>'}
+          </button>`).join('') : `
+          <div class="empty">${icon('bell', 30)}<h3>No notifications</h3><p>You are all caught up.</p></div>`}
+      </section>
+      <div style="height:24px"></div>
+    </div>
+  </main>`;
+}
+
+/* ============================================================
+   VIEW — ACADEMICS (full screen workspace)
+   ============================================================ */
+function viewAcademics(){
+  const tab = state.academicsTab || 'timetable';
+  const tabs = [
+    { id:'timetable', label:'Timetable' },
+    { id:'tasks', label:'Tasks' },
+    { id:'resources', label:'Resources' },
+    { id:'discover', label:'Discover' }
+  ];
+  let content = '';
+  if (tab === 'timetable') content = academicsTimetable();
+  else if (tab === 'tasks') content = academicsTasks();
+  else if (tab === 'resources') content = academicsResources();
+  else content = academicsDiscover();
+
+  return `
+  <div class="fullscreen">
+    <div class="fs-head">
+      <div class="wrap" style="max-width:820px">
+        <div class="fs-title-row">
+          <button class="icon-btn" data-act="nav" data-view="home" aria-label="Close">${icon('chevronLeft', 21)}</button>
+          <div class="fs-title grow">Academic workspace</div>
+        </div>
+        <div class="tabs" style="margin-bottom:0;padding:0 18px;gap:20px;overflow-x:auto">
+          ${tabs.map(t => `<button class="tab ${tab === t.id ? 'on' : ''}" data-act="acad-tab" data-tab="${t.id}" style="white-space:nowrap">${t.label}</button>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="fs-body" style="padding-top:18px;padding-bottom:60px">${content}</div>
+  </div>`;
+}
+
+function academicsTimetable(){
+  const day = state.academicsDay || 1;
+  const list = classesForDay(day);
+  return `
+    <div class="day-strip">
+      ${[1,2,3,4,5].map(d => `
+        <button class="day-pill ${d === day ? 'on' : ''}" data-act="acad-day" data-day="${d}">
+          <span>${DAY_NAMES[d]}</span>
+          <b>${DAY_FULL[d].slice(0,3)}</b>
+        </button>`).join('')}
+    </div>
+
+    <div class="row-between" style="margin:18px 0 10px">
+      <h2 class="h2">${DAY_FULL[day]}</h2>
+      <button class="btn sm ghost" data-act="open-add-class">${icon('plus', 15)} Add class</button>
+    </div>
+
+    ${list.length ? `<div class="panel">${list.map(c => `
+      <div class="class-row">
+        <div class="class-time">${esc(c.start)}<div class="xs muted" style="font-weight:500">${esc(c.end)}</div></div>
+        <div class="class-accent"></div>
+        <div class="class-body">
+          <div class="class-code">${esc(c.code)} · ${esc(c.title)}</div>
+          <div class="class-meta">${esc(c.venue)}</div>
+        </div>
+        <div class="row" style="gap:2px">
+          <button class="icon-btn" data-act="edit-class" data-id="${c.id}" aria-label="Edit">${icon('edit', 17)}</button>
+          <button class="icon-btn" data-act="delete-class" data-id="${c.id}" aria-label="Delete">${icon('trash', 17)}</button>
+        </div>
+      </div>`).join('')}</div>`
+      : `<div class="empty">${icon('calendar', 30)}<h3>No classes on ${DAY_FULL[day]}</h3><p>Add a class to start building your week.</p>
+         <button class="btn primary" style="margin-top:16px" data-act="open-add-class">Add class</button></div>`}
+
+    <section class="section">
+      <div class="section-head"><h2 class="h2">Week overview</h2></div>
+      <div class="panel">
+        ${[1,2,3,4,5].map(d => {
+          const n = classesForDay(d).length;
+          return `<div class="card-line">
+            <div class="grow"><div class="list-label">${DAY_FULL[d]}</div><div class="list-sub">${n ? n + (n === 1 ? ' class' : ' classes') : 'Free day'}</div></div>
+            <span class="xs muted tnum">${classesForDay(d).map(c => c.start).join(' · ') || '—'}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </section>`;
+}
+
+function academicsTasks(){
+  const pending = state.tasks.filter(t => !t.done).sort((a, b) => a.due.localeCompare(b.due));
+  const done = state.tasks.filter(t => t.done);
+  const pct = state.tasks.length ? Math.round((done.length / state.tasks.length) * 100) : 0;
+  const row = t => `
+    <div class="task-row ${t.done ? 'done' : ''}">
+      <button class="check ${t.done ? 'on' : ''}" data-act="toggle-task" data-id="${t.id}" aria-label="Toggle">${icon('check', 13)}</button>
+      <div class="grow">
+        <div class="task-title">${esc(t.title)}</div>
+        <div class="task-meta">
+          <span>${esc(t.course)}</span><span>·</span><span>Due ${dateLabel(t.due)}</span>
+          <span class="prio ${t.priority}">${t.priority}</span>
+        </div>
+      </div>
+      <button class="icon-btn" data-act="delete-task" data-id="${t.id}" aria-label="Delete">${icon('trash', 17)}</button>
+    </div>`;
+
+  return `
+    <div class="row-between" style="margin-bottom:10px">
+      <div>
+        <div class="h2">My Tasks</div>
+        <div class="xs muted" style="margin-top:2px">${pending.length} pending · ${done.length} completed</div>
+      </div>
+      <button class="btn sm ghost" data-act="open-add-task">${icon('plus', 15)} Add task</button>
+    </div>
+
+    <div class="progress" style="margin-bottom:18px"><i style="width:${pct}%"></i></div>
+
+    <div class="panel">
+      ${pending.length ? pending.map(row).join('') : `<div class="empty" style="padding:24px 10px">${icon('checkCircle', 28)}<h3>All clear</h3><p>No pending tasks right now.</p></div>`}
+    </div>
+
+    ${done.length ? `
+      <section class="section">
+        <div class="eyebrow" style="margin-bottom:10px">Completed</div>
+        <div class="panel" style="opacity:.72">${done.map(row).join('')}</div>
+      </section>` : ''}`;
+}
+
+function academicsResources(){
+  const f = state.academicsResFilter;
+  let list = state.resources.filter(r =>
+    (f.dept === 'All' || r.dept === f.dept) &&
+    (f.level === 'All' || r.level === f.level) &&
+    (f.sem === 'All' || r.sem === f.sem)
+  );
+  const depts = ['All', ...new Set(state.resources.map(r => r.dept))];
+  const levels = ['All', '300', '400', '500'];
+  const sems = ['All', 'First', 'Second'];
+
+  return `
+    <div class="row-between" style="margin-bottom:12px">
+      <div class="h2">Resources</div>
+      <span class="xs muted tnum">${list.length} files</span>
+    </div>
+
+    <div class="row" style="gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <select class="select" style="width:auto;height:38px;font-size:12.5px;padding:0 34px 0 12px" data-act="res-filter" data-key="dept">
+        ${depts.map(d => `<option ${f.dept === d ? 'selected' : ''}>${d}</option>`).join('')}
+      </select>
+      <select class="select" style="width:auto;height:38px;font-size:12.5px;padding:0 34px 0 12px" data-act="res-filter" data-key="level">
+        ${levels.map(l => `<option value="${l}" ${f.level === l ? 'selected' : ''}>${l === 'All' ? 'All levels' : l + ' Level'}</option>`).join('')}
+      </select>
+      <select class="select" style="width:auto;height:38px;font-size:12.5px;padding:0 34px 0 12px" data-act="res-filter" data-key="sem">
+        ${sems.map(s => `<option value="${s}" ${f.sem === s ? 'selected' : ''}>${s === 'All' ? 'All semesters' : s + ' semester'}</option>`).join('')}
+      </select>
+    </div>
+
+    ${list.length ? list.map(r => {
+      const saved = state.savedResources.includes(r.id);
+      return `
+      <div class="panel" style="margin-bottom:10px">
+        <div class="row-between" style="align-items:flex-start">
+          <div class="grow">
+            <div class="row" style="gap:8px;margin-bottom:6px">
+              <span class="cat-tag">${esc(r.code)}</span>
+              <span class="xs muted">${esc(r.type)}</span>
+            </div>
+            <div class="h3" style="font-size:14px">${esc(r.file)}</div>
+            <div class="xs muted" style="margin-top:5px">${esc(r.title)} · ${esc(r.level)} Level · ${esc(r.sem)} semester</div>
+            <div class="xs muted" style="margin-top:2px">Uploaded by @${esc(r.by)} · ${dateLabel(r.date)}</div>
+          </div>
+          <button class="icon-btn" data-act="save-resource" data-id="${r.id}" aria-label="Save">
+            <span style="${saved ? '' : 'opacity:.45'}">${icon('bookmark', 18)}</span>
+          </button>
+        </div>
+        <div class="row" style="gap:8px;margin-top:14px">
+          <button class="btn sm outline grow" data-act="open-resource" data-id="${r.id}">${icon('download', 15)} Open</button>
+          <button class="btn sm ghost grow" data-act="save-resource" data-id="${r.id}">${saved ? 'Saved' : 'Save'}</button>
+        </div>
+      </div>`;
+    }).join('') : `<div class="empty">${icon('book', 30)}<h3>No resources found</h3><p>Try a different department, level or semester.</p></div>`}`;
+}
+
+function academicsDiscover(){
+  const byCourse = {};
+  state.resources.forEach(r => {
+    const key = r.code;
+    byCourse[key] = byCourse[key] || { code:r.code, title:r.title, dept:r.dept, level:r.level, count:0 };
+    byCourse[key].count++;
+  });
+  const courses = Object.values(byCourse).sort((a, b) => a.code.localeCompare(b.code));
+  return `
+    <div class="h2" style="margin-bottom:4px">Course discovery</div>
+    <p class="sub" style="margin-bottom:16px">Browse material by department, level and course code.</p>
+
+    ${['Computer Science','General Studies','Mathematics'].map(dept => {
+      const items = courses.filter(c => c.dept === dept);
+      if (!items.length) return '';
+      return `
+      <section class="section">
+        <div class="section-head"><h2 class="h2" style="font-size:15px">${esc(dept)}</h2><span class="xs muted">${items.length} courses</span></div>
+        <div class="list">
+          ${items.map(c => `
+            <button class="list-row" data-act="acad-tab" data-tab="resources">
+              ${icon('book', 19)}
+              <div class="grow">
+                <div class="list-label">${esc(c.code)} · ${esc(c.title)}</div>
+                <div class="list-sub">${esc(c.level)} Level · ${c.count} ${c.count === 1 ? 'resource' : 'resources'}</div>
+              </div>
+              <span class="chev">${icon('chevronRight', 17)}</span>
+            </button>`).join('')}
+        </div>
+      </section>`;
+    }).join('')}`;
+}
+
+/* ============================================================
+   AFTER RENDER — targeted listeners
+   ============================================================ */
+function afterRender(){
+  const search = $('#explore-search');
+  if (search){
+    search.addEventListener('input', e => {
+      state.search = e.target.value;
+      const pos = e.target.selectionStart;
+      const wrap = e.target.closest('.page');
+      // Re-render only the results section for snappy typing
+      const resultsSection = $$('.section', wrap).find(s => s.querySelector('.grid-products') || s.querySelector('.empty'));
+      const q = state.search.toLowerCase().trim();
+      const cat = state.exploreCat || 'All';
+      const list = PRODUCTS.filter(p => {
+        const v = VENDORS.find(x => x.id === p.vendor);
+        const matchCat = cat === 'All' || p.cat === cat;
+        const matchQ = !q || p.name.toLowerCase().includes(q) || (v && v.name.toLowerCase().includes(q)) || p.cat.toLowerCase().includes(q);
+        return matchCat && matchQ;
+      });
+      if (resultsSection){
+        const head = resultsSection.querySelector('.section-head h2');
+        const count = resultsSection.querySelector('.section-head .xs');
+        if (head) head.textContent = q ? 'Search results' : (cat === 'All' ? 'New arrivals' : cat);
+        if (count) count.textContent = `${list.length} ${list.length === 1 ? 'item' : 'items'}`;
+        const grid = resultsSection.querySelector('.grid-products');
+        if (grid){
+          if (list.length){ grid.innerHTML = list.map(p => productCard(p)).join(''); }
+          else {
+            resultsSection.innerHTML = `
+              <div class="section-head"><h2 class="h2">Search results</h2><span class="xs muted tnum">0 items</span></div>
+              <div class="empty">${icon('search', 30)}<h3>No products found</h3><p>Try a different search term or category.</p></div>`;
+          }
+        } else {
+          resultsSection.innerHTML = `
+            <div class="section-head"><h2 class="h2">${q ? 'Search results' : 'New arrivals'}</h2><span class="xs muted tnum">${list.length} items</span></div>
+            <div class="grid-products">${list.map(p => productCard(p)).join('')}</div>`;
+        }
+      }
+      const el = $('#explore-search');
+      if (el){ el.focus(); el.setSelectionRange(pos, pos); }
+    });
+  }
+
+  const aiInput = $('#ai-input');
+  if (aiInput){
+    aiInput.addEventListener('input', e => { state.aiDraft = e.target.value; });
+    aiInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter'){ e.preventDefault(); e.target.form.requestSubmit(); }
+    });
+  }
+
+  const composer = $('#composer-text');
+  if (composer){
+    composer.addEventListener('input', e => {
+      const c = $('#composer-count');
+      if (c) c.textContent = `${e.target.value.length}/280`;
+    });
+    setTimeout(() => composer.focus(), 120);
+  }
+
+  const chat = $('#ai-chat');
+  if (chat) chat.scrollIntoView({ block:'end' });
+}
+
+/* ============================================================
+   EVENT DELEGATION — CLICKS
+   ============================================================ */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]');
+  if (!el) return;
+  const act = el.dataset.act;
+  const id = el.dataset.id;
+
+  switch(act){
+    /* ---- onboarding / auth ---- */
+    case 'skip-onboarding':
+      state.seenOnboarding = true; state.phase = 'auth'; save(); render(); break;
+    case 'onb-next':
+      if (onbIndex < PILLARS.length - 1){ onbIndex++; render(); }
+      else { state.seenOnboarding = true; state.phase = 'auth'; save(); render(); }
+      break;
+    case 'demo-login':
+      state.user = { ...DEMO_USER, verified:false };
+      state.kycDraft = { name:DEMO_USER.name, nick:DEMO_USER.nick, uni:DEMO_USER.uni, dept:DEMO_USER.dept, level:DEMO_USER.level, matric:DEMO_USER.matric };
+      state.phase = 'kyc';
+      render();
+      break;
+    case 'toast-signup':
+      toast('Account creation is enabled through the demo flow.');
+      break;
+    case 'forgot':
+      toast('Password reset is not available in the prototype.');
+      break;
+
+    /* ---- navigation ---- */
+    case 'nav':
+      go(el.dataset.view);
+      break;
+    case 'go':
+      go(el.dataset.view, { tab: el.dataset.tab, id: el.dataset.id });
+      break;
+
+    /* ---- feed ---- */
+    case 'feed-sort':
+      state.feedSort = el.dataset.sort; render(); break;
+    case 'feed-filter':
+      state.feedFilter = el.dataset.filter; render(); break;
+    case 'open-composer':
+      openComposer(); break;
+    case 'like-post': {
+      const p = state.posts.find(x => x.id === id);
+      if (p){
+        p.liked = !p.liked;
+        p.likes += p.liked ? 1 : -1;
+        save(); render();
+      }
+      break;
+    }
+    case 'open-comments':
+      openComments(id); break;
+    case 'like-comment': {
+      const p = state.posts.find(x => x.id === el.dataset.post);
+      const c = p && p.comments.find(x => x.id === id);
+      if (c){ c.liked = !c.liked; c.likes += c.liked ? 1 : -1; save(); openComments(p.id); }
+      break;
+    }
+    case 'reply-comment': {
+      const p = state.posts.find(x => x.id === el.dataset.post);
+      const c = p && p.comments.find(x => x.id === id);
+      if (!c) break;
+      openModal(`
+        <div class="sheet-head">
+          <div class="sheet-title">Reply to @${esc(c.nick)}</div>
+          <button class="icon-btn" data-act="close-modal">${icon('x', 20)}</button>
+        </div>
+        <p class="sub" style="margin-bottom:14px">${esc(c.text)}</p>
+        <form data-form="add-reply" data-post="${p.id}" data-comment="${c.id}">
+          <textarea class="textarea" name="text" rows="3" placeholder="Write a reply…" required></textarea>
+          <div class="row" style="gap:10px;margin-top:14px">
+            <button type="button" class="btn ghost grow" data-act="close-modal">Cancel</button>
+            <button type="submit" class="btn primary grow">Reply</button>
+          </div>
+        </form>`);
+      break;
+    }
+    case 'post-menu': {
+      const p = state.posts.find(x => x.id === id);
+      if (!p) break;
+      openModal(`
+        <div class="sheet-head">
+          <div class="sheet-title">Post options</div>
+          <button class="icon-btn" data-act="close-modal">${icon('x', 20)}</button>
+        </div>
+        <div class="list" style="border:0">
+          <div class="list-row" style="cursor:default">
+            <div class="grow">
+              <div class="list-label">Expires in ${expiryDaysLeft(p)} days</div>
+              <div class="list-sub">Posts live for 7 days, extended to a maximum of 14 days by meaningful engagement.</div>
+            </div>
+          </div>
+          <button class="list-row" id="report-post">
+            ${icon('shield', 19)}
+            <div class="grow"><div class="list-label">Report post</div><div class="list-sub">Flag this post for moderation</div></div>
+          </button>
+        </div>`);
+      $('#report-post').addEventListener('click', () => {
+        closeModal();
+        toast('Post reported. Our moderators will review it.');
+      });
+      break;
+    }
+
+    /* ---- home ---- */
+    case 'home-day':
+      state.homeDay = Number(el.dataset.day); render(); break;
+    case 'home-features-toggle':
+      state.homeFeaturesExpanded = !state.homeFeaturesExpanded; render(); break;
+
+    /* ---- explore / cart ---- */
+    case 'explore-cat':
+      state.exploreCat = el.dataset.cat; render(); break;
+    case 'open-store':
+      go('store', { id: el.dataset.id }); break;
+    case 'open-product':
+      go('product', { id: el.dataset.id }); break;
+    case 'fav-product': {
+      const i = state.savedProducts.indexOf(id);
+      if (i >= 0){ state.savedProducts.splice(i, 1); toast('Removed from saved'); }
+      else { state.savedProducts.push(id); toast('Saved'); }
+      save(); render(); break;
+    }
+    case 'add-cart': {
+      const line = state.cart.find(l => l.id === id);
+      if (line) line.qty++;
+      else state.cart.push({ id, qty:1 });
+      save(); toast('Added to cart'); render(); break;
+    }
+    case 'add-cart-checkout': {
+      const line = state.cart.find(l => l.id === id);
+      if (line) line.qty++;
+      else state.cart.push({ id, qty:1 });
+      save(); go('cart'); break;
+    }
+    case 'cart-inc': {
+      const line = state.cart.find(l => l.id === id);
+      if (line){ line.qty++; save(); render(); }
+      break;
+    }
+    case 'cart-dec': {
+      const line = state.cart.find(l => l.id === id);
+      if (line){ line.qty--; if (line.qty <= 0) state.cart = state.cart.filter(l => l.id !== id); save(); render(); }
+      break;
+    }
+    case 'clear-cart':
+      confirmDialog('Clear cart', 'Remove all items from your cart?', 'Clear cart', () => {
+        state.cart = []; save(); render(); toast('Cart cleared');
+      });
+      break;
+    case 'checkout':
+      if (!state.cart.length){ toast('Your cart is empty'); break; }
+      toast('Demo checkout — vendor WhatsApp flow simulated');
+      break;
+    case 'vendor-whatsapp':
+      toast('Opening WhatsApp chat with the vendor (simulated)');
+      break;
+
+    /* ---- academics ---- */
+    case 'acad-tab':
+      state.academicsTab = el.dataset.tab; render(); break;
+    case 'acad-day':
+      state.academicsDay = Number(el.dataset.day); render(); break;
+    case 'toggle-task': {
+      const t = state.tasks.find(x => x.id === id);
+      if (t){ t.done = !t.done; save(); render(); }
+      break;
+    }
+    case 'delete-task':
+      confirmDialog('Delete task', 'This task will be removed from your planner.', 'Delete', () => {
+        state.tasks = state.tasks.filter(t => t.id !== id); save(); render(); toast('Task deleted');
+      });
+      break;
+    case 'open-add-task':
+      openTaskModal(); break;
+    case 'open-add-class':
+      openClassModal(); break;
+    case 'edit-class': {
+      const c = state.classes.find(x => x.id === id);
+      if (c) openClassModal(c);
+      break;
+    }
+    case 'delete-class':
+      confirmDialog('Delete class', 'Remove this class from your timetable?', 'Delete', () => {
+        state.classes = state.classes.filter(c => c.id !== id); save(); render(); toast('Class removed');
+      });
+      break;
+    case 'save-resource': {
+      const i = state.savedResources.indexOf(id);
+      if (i >= 0){ state.savedResources.splice(i, 1); toast('Resource removed'); }
+      else { state.savedResources.push(id); toast('Resource saved'); }
+      save(); render(); break;
+    }
+    case 'open-resource':
+      toast('Opening resource (demo — no file attached)'); break;
+
+    /* ---- notifications ---- */
+    case 'read-notif': {
+      const n = state.notifications.find(x => x.id === id);
+      if (n){ n.read = true; save(); render(); }
+      break;
+    }
+    case 'read-all':
+      state.notifications.forEach(n => n.read = true); save(); render(); toast('All notifications read'); break;
+
+    /* ---- map ---- */
+    case 'map-pin':
+      go('map', { loc: id }); break;
+
+    /* ---- ai ---- */
+    case 'ai-suggest': {
+      const text = el.dataset.text;
+      state.aiMessages.push({ role:'me', text });
+      state.aiMessages.push({ role:'ai', text: aiRespond(text) });
+      save(); render(); break;
+    }
+    case 'ai-clear':
+      state.aiMessages = []; save(); render(); break;
+
+    /* ---- settings ---- */
+    case 'toggle-pref':
+      state.prefs[el.dataset.pref] = !state.prefs[el.dataset.pref]; save(); render(); break;
+    case 'edit-profile':
+      openProfileModal(); break;
+    case 'kyc-restart':
+      state.kycDraft = { name:state.user.name, nick:state.user.nick, uni:state.user.uni, dept:state.user.dept, level:state.user.level, matric:state.user.matric };
+      state.phase = 'kyc'; render(); break;
+    case 'reset-data':
+      confirmDialog('Reset demo data', 'This restores the prototype to its original state and signs you out.', 'Reset', () => {
+        localStorage.removeItem(KEY);
+        state = defaultState();
+        state.phase = 'splash';
+        render();
+        setTimeout(() => { if (state.phase === 'splash'){ state.phase = 'onboarding'; render(); } }, 1500);
+      });
+      break;
+    case 'signout':
+      confirmDialog('Sign out', 'You will need to sign in again to access Ring.', 'Sign out', () => {
+        const seen = state.seenOnboarding;
+        state = defaultState();
+        state.seenOnboarding = seen;
+        state.phase = 'auth';
+        save(); render();
+      });
+      break;
+
+    case 'close-modal':
+      closeModal(); break;
+  }
+});
+
+/* ============================================================
+   EVENT DELEGATION — FORMS
+   ============================================================ */
+document.addEventListener('submit', e => {
+  const form = e.target.closest('form[data-form]');
+  if (!form) return;
+  e.preventDefault();
+  const kind = form.dataset.form;
+  const data = new FormData(form);
+
+  switch(kind){
+    case 'login': {
+      const email = (data.get('email') || '').toString().trim();
+      const pass = (data.get('password') || '').toString();
+      if (!email || !pass){ toast('Enter your email and password'); return; }
+      state.user = { ...DEMO_USER, email };
+      state.kycDraft = { name:DEMO_USER.name, nick:DEMO_USER.nick, uni:DEMO_USER.uni, dept:DEMO_USER.dept, level:DEMO_USER.level, matric:DEMO_USER.matric };
+      state.phase = 'kyc'; render();
+      break;
+    }
+    case 'kyc': {
+      const name = (data.get('name') || '').toString().trim();
+      const nick = (data.get('nick') || '').toString().trim().replace(/^@/, '');
+      const matric = (data.get('matric') || '').toString().trim();
+      if (!name || !nick || !matric){ toast('Please complete all fields'); return; }
+      const initials = name.split(' ').filter(Boolean).slice(0, 2).map(s => s[0].toUpperCase()).join('');
+      state.user = {
+        ...(state.user || DEMO_USER),
+        name, nick, matric,
+        uni: (data.get('uni') || 'Bells University of Technology').toString(),
+        dept: (data.get('dept') || 'Computer Science').toString(),
+        level: (data.get('level') || '400 Level').toString(),
+        initials,
+        verified: true,
+        email: (state.user && state.user.email) || DEMO_USER.email
+      };
+      state.kycDraft = null;
+      state.phase = 'app';
+      state.view = 'home';
+      save(); render();
+      toast('Verification complete — welcome to Ring');
+      break;
+    }
+    case 'create-post': {
+      const text = (data.get('text') || '').toString().trim();
+      const cat = (data.get('cat') || 'Campus Gist').toString();
+      if (!text){ toast('Write something first'); return; }
+      publishPost(text, cat);
+      closeModal();
+      state.view = 'feed';
+      render();
+      toast('Post published');
+      break;
+    }
+    case 'add-comment': {
+      const text = (data.get('text') || '').toString().trim();
+      const postId = form.dataset.post;
+      if (!text) return;
+      const p = state.posts.find(x => x.id === postId);
+      if (!p) return;
+      p.comments.push({
+        id: 'c' + Date.now(),
+        nick: state.user.nick,
+        initials: state.user.initials,
+        text,
+        createdAt: Date.now(),
+        likes: 0,
+        liked: false,
+        replies: []
+      });
+      save();
+      openComments(postId);
+      toast('Comment added');
+      break;
+    }
+    case 'add-reply': {
+      const text = (data.get('text') || '').toString().trim();
+      const postId = form.dataset.post;
+      const commentId = form.dataset.comment;
+      if (!text) return;
+      const p = state.posts.find(x => x.id === postId);
+      const c = p && p.comments.find(x => x.id === commentId);
+      if (!c) return;
+      c.replies.push({
+        id: 'r' + Date.now(),
+        nick: state.user.nick,
+        initials: state.user.initials,
+        text,
+        createdAt: Date.now()
+      });
+      save();
+      openComments(postId);
+      toast('Reply added');
+      break;
+    }
+    case 'ai-send': {
+      const text = (data.get('text') || '').toString().trim();
+      if (!text) return;
+      state.aiMessages.push({ role:'me', text });
+      state.aiMessages.push({ role:'ai', text: aiRespond(text) });
+      state.aiDraft = '';
+      save(); render();
+      break;
+    }
+    case 'add-task': {
+      const title = (data.get('title') || '').toString().trim();
+      const course = (data.get('course') || 'General').toString().trim();
+      const due = (data.get('due') || todayISO(1)).toString();
+      const priority = (data.get('priority') || 'medium').toString();
+      if (!title){ toast('Enter a task title'); return; }
+      state.tasks.push({ id:'t' + Date.now(), title, course, due, priority, done:false });
+      save(); closeModal(); render(); toast('Task added');
+      break;
+    }
+    case 'add-class': {
+      const code = (data.get('code') || '').toString().trim();
+      const title = (data.get('title') || '').toString().trim();
+      const venue = (data.get('venue') || '').toString().trim();
+      const day = Number(data.get('day') || 1);
+      const start = (data.get('start') || '08:00').toString();
+      const end = (data.get('end') || '10:00').toString();
+      if (!code || !title){ toast('Course code and title are required'); return; }
+      const editId = form.dataset.edit;
+      if (editId){
+        const c = state.classes.find(x => x.id === editId);
+        if (c) Object.assign(c, { code, title, venue, day, start, end });
+        toast('Class updated');
+      } else {
+        state.classes.push({ id:'c' + Date.now(), code, title, venue, day, start, end });
+        toast('Class added');
+      }
+      save(); closeModal(); render();
+      break;
+    }
+    case 'edit-profile': {
+      const name = (data.get('name') || '').toString().trim();
+      const nick = (data.get('nick') || '').toString().trim().replace(/^@/, '');
+      const matric = (data.get('matric') || '').toString().trim();
+      if (!name || !nick){ toast('Name and nickname are required'); return; }
+      const initials = name.split(' ').filter(Boolean).slice(0, 2).map(s => s[0].toUpperCase()).join('');
+      Object.assign(state.user, {
+        name, nick, matric, initials,
+        dept: (data.get('dept') || state.user.dept).toString(),
+        level: (data.get('level') || state.user.level).toString()
+      });
+      save(); closeModal(); render(); toast('Profile updated');
+      break;
+    }
+  }
+});
+
+/* ---------- change delegation (selects used as actions) ---------- */
+document.addEventListener('change', e => {
+  const el = e.target.closest('[data-act="res-filter"]');
+  if (el){
+    state.academicsResFilter[el.dataset.key] = el.value;
+    render();
+  }
+});
+
+/* ============================================================
+   MODALS — tasks / classes / profile
+   ============================================================ */
+function openTaskModal(){
+  openModal(`
+    <div class="sheet-head">
+      <div class="sheet-title">Add task</div>
+      <button class="icon-btn" data-act="close-modal">${icon('x', 20)}</button>
+    </div>
+    <form data-form="add-task">
+      <div class="field"><label>Task</label><input class="input" name="title" placeholder="e.g. Database assignment" required /></div>
+      <div class="field"><label>Course</label><input class="input" name="course" placeholder="e.g. CSC 405" /></div>
+      <div class="row" style="gap:10px">
+        <div class="field grow"><label>Due date</label><input class="input" type="date" name="due" value="${todayISO(1)}" /></div>
+        <div class="field grow"><label>Priority</label>
+          <select class="select" name="priority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" style="gap:10px;margin-top:6px">
+        <button type="button" class="btn ghost grow" data-act="close-modal">Cancel</button>
+        <button type="submit" class="btn primary grow">Add task</button>
+      </div>
+    </form>`);
+}
+function openClassModal(existing){
+  const c = existing || { code:'', title:'', venue:'', day: state.academicsDay || 1, start:'08:00', end:'10:00' };
+  openModal(`
+    <div class="sheet-head">
+      <div class="sheet-title">${existing ? 'Edit class' : 'Add class'}</div>
+      <button class="icon-btn" data-act="close-modal">${icon('x', 20)}</button>
+    </div>
+    <form data-form="add-class" ${existing ? `data-edit="${existing.id}"` : ''}>
+      <div class="row" style="gap:10px">
+        <div class="field grow"><label>Course code</label><input class="input" name="code" value="${esc(c.code)}" placeholder="CSC 401" required /></div>
+        <div class="field grow"><label>Day</label>
+          <select class="select" name="day">
+            ${[1,2,3,4,5].map(d => `<option value="${d}" ${c.day === d ? 'selected' : ''}>${DAY_FULL[d]}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Course title</label><input class="input" name="title" value="${esc(c.title)}" placeholder="Compiler Design" required /></div>
+      <div class="field"><label>Venue</label><input class="input" name="venue" value="${esc(c.venue)}" placeholder="LT 2" /></div>
+      <div class="row" style="gap:10px">
+        <div class="field grow"><label>Start</label><input class="input" type="time" name="start" value="${esc(c.start)}" /></div>
+        <div class="field grow"><label>End</label><input class="input" type="time" name="end" value="${esc(c.end)}" /></div>
+      </div>
+      <div class="row" style="gap:10px;margin-top:6px">
+        <button type="button" class="btn ghost grow" data-act="close-modal">Cancel</button>
+        <button type="submit" class="btn primary grow">${existing ? 'Save changes' : 'Add class'}</button>
+      </div>
+    </form>`);
+}
+function openProfileModal(){
+  const u = state.user;
+  const depts = ['Computer Science','Information Technology','Cyber Security','Software Engineering','Accounting','Business Administration','Mass Communication','Biochemistry','Microbiology','Mechanical Engineering','Electrical Engineering','Civil Engineering','Architecture','Law'];
+  const levels = ['100 Level','200 Level','300 Level','400 Level','500 Level'];
+  openModal(`
+    <div class="sheet-head">
+      <div class="sheet-title">Edit profile</div>
+      <button class="icon-btn" data-act="close-modal">${icon('x', 20)}</button>
+    </div>
+    <form data-form="edit-profile">
+      <div class="field"><label>Full name</label><input class="input" name="name" value="${esc(u.name)}" required /></div>
+      <div class="field"><label>Nickname</label><input class="input" name="nick" value="${esc(u.nick)}" required /></div>
+      <div class="field"><label>Matriculation number</label><input class="input" name="matric" value="${esc(u.matric)}" /></div>
+      <div class="field"><label>Department</label>
+        <select class="select" name="dept">${depts.map(d => `<option ${d === u.dept ? 'selected' : ''}>${d}</option>`).join('')}</select>
+      </div>
+      <div class="field"><label>Academic level</label>
+        <select class="select" name="level">${levels.map(l => `<option ${l === u.level ? 'selected' : ''}>${l}</option>`).join('')}</select>
+      </div>
+      <div class="row" style="gap:10px;margin-top:6px">
+        <button type="button" class="btn ghost grow" data-act="close-modal">Cancel</button>
+        <button type="submit" class="btn primary grow">Save changes</button>
+      </div>
+    </form>`);
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+(function boot(){
+  load();
+  if (state.user){
+    state.phase = 'app';
+    if (!state.view) state.view = 'home';
+  } else if (state.seenOnboarding){
+    state.phase = 'auth';
+  } else {
+    state.phase = 'splash';
+  }
+  render();
+
+  if (state.phase === 'splash'){
+    setTimeout(() => {
+      if (state.phase === 'splash'){ state.phase = 'onboarding'; render(); }
+    }, 1900);
+  }
+})();
+</script>
+</body>
+</html>
